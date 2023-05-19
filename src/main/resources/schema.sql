@@ -11,11 +11,6 @@ ALTER TABLE Bills ADD INDEX date_time_idx (date_time);
 ALTER TABLE Bills ADD INDEX total_price_idx (total_price);
 
 
-INSERT INTO Bills
-VALUES (1, '2023-04-11 12:30:00', 'kasun', 100.00, 150.00, 50.00),
-       (2, '2022-04-11 11:30:00', 'kasun', 200.00, 250.00, 50.00);
-
-
 CREATE TABLE IF NOT EXISTS BillDescription
 (
     bill_number INT            NOT NULL,
@@ -29,23 +24,20 @@ CREATE TABLE IF NOT EXISTS BillDescription
 
 );
 
-INSERT INTO BillDescription
-VALUES (1, 1232, 'key', 20.00, 1, 20.00),
-       (1, 1233, 'bolt', 10.00, 2, 20.00);
-
-
-
-CREATE TABLE IF NOT EXISTS Items
-(
-
-    item_code     BIGINT PRIMARY KEY,
-    item_name     VARCHAR(200)   NOT NULL,
-    selling_price DECIMAL(12, 2) NOT NULL,
-    qty           INT            NOT NULL,
-    price         DECIMAL(12, 2) NOT NULL
-
+CREATE TABLE Customer(
+                         id INT PRIMARY KEY,
+                         name VARCHAR(100) NOT NULL,
+                         address VARCHAR(500) NOT NULL,
+                         INDEX idx_customer_name (name)
 );
 
+CREATE TABLE Contact(
+                        contact VARCHAR(15) NOT NULL,
+                        customer_id INT NOT NULL,
+                        CONSTRAINT uk_contact UNIQUE KEY (contact),
+                        CONSTRAINT pk_contact PRIMARY KEY (contact, customer_id)
+);
+ALTER TABLE Contact ADD CONSTRAINT fk_contact FOREIGN KEY (customer_id) REFERENCES Customer (id);
 
 
 
@@ -69,30 +61,8 @@ CREATE TABLE User(
         role ENUM('ADMIN', 'USER') NOT NULL
 );
 
-CREATE TABLE Customer(
-                         id INT PRIMARY KEY,
-                         name VARCHAR(100) NOT NULL,
-                         address VARCHAR(500) NOT NULL,
-                         INDEX idx_customer_name (name)
-);
 
-CREATE TABLE Contact(
-                        contact VARCHAR(15) NOT NULL,
-                        customer_id INT NOT NULL,
-                        CONSTRAINT uk_contact UNIQUE KEY (contact),
-                        CONSTRAINT pk_contact PRIMARY KEY (contact, customer_id)
-);
 
-ALTER TABLE Contact ADD CONSTRAINT fk_contact FOREIGN KEY (customer_id) REFERENCES Customer (id);
-
-DROP TABLE IF EXISTS Loyalty;
-DROP TABLE IF EXISTS Customer;
-DROP TABLE IF EXISTS Bills;
-DROP TABLE IF EXISTS BillDescription;
-DROP TABLE IF EXISTS Items;
-DROP TABLE IF EXISTS User;
-DROP TABLE IF EXISTS Contact;
-DROP TABLE IF EXISTS Customer;
 CREATE TABLE IF NOT EXISTS Supplier(
                                        id INT PRIMARY KEY ,
                                        name VARCHAR(100) NOT NULL ,
@@ -145,7 +115,35 @@ CREATE TABLE IF NOT EXISTS Items(
                                     date_bought DATETIME NOT NULL ,
                                     selling_price DECIMAL(12,2) NOT NULL ,
                                     profit DECIMAL(12,2) NOT NULL ,
+                                    price DECIMAL(12, 2) NOT NULL,
                                     CONSTRAINT batch_no_item FOREIGN KEY (batch_num) REFERENCES Batches(batch_no)
 
 
 );
+
+DROP TABLE IF EXISTS Loyalty;
+DROP TABLE IF EXISTS Customer;
+DROP TABLE IF EXISTS Bills;
+DROP TABLE IF EXISTS BillDescription;
+DROP TABLE IF EXISTS User;
+DROP TABLE IF EXISTS Contact;
+DROP TABLE IF EXISTS Customer;
+DROP TABLE IF EXISTS Items;
+DROP TABLE IF EXISTS Parts;
+DROP TABLE IF EXISTS Parts_Category;
+DROP TABLE IF EXISTS List_Of_Bikes;
+DROP TABLE IF EXISTS Brands;
+DROP TABLE IF EXISTS Batches;
+DROP TABLE IF EXISTS Supplier;
+
+
+
+
+
+
+
+
+
+
+
+

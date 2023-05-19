@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="480.0" prefWidth="395.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.dep10.possystem.controller.NewSupplierScenecontroller">
+<AnchorPane prefHeight="480.0" prefWidth="395.0" stylesheets="@../css/Styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.dep10.possystem.controller.NewSupplierScenecontroller">
    <children>
       <VBox layoutX="8.0" layoutY="47.0" spacing="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
          <children>
@@ -36,10 +36,10 @@
             </HBox>
          </children>
       </VBox>
-      <HBox layoutX="120.0" layoutY="178.0" prefHeight="125.0" prefWidth="265.0" spacing="10.0" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="10.0">
+      <HBox layoutX="120.0" layoutY="178.0" prefHeight="107.0" prefWidth="265.0" spacing="10.0" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="10.0">
          <children>
-            <ListView fx:id="lstContact" prefHeight="125.0" prefWidth="127.0" HBox.hgrow="ALWAYS" />
-            <VBox spacing="10.0">
+            <ListView fx:id="lstContact" prefHeight="98.0" prefWidth="181.0" HBox.hgrow="ALWAYS" />
+            <VBox alignment="CENTER" spacing="10.0">
                <children>
                   <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#btnAddOnAction" prefHeight="24.0" prefWidth="74.0" text="ADD" />
                   <Button fx:id="btnRemove" mnemonicParsing="false" onAction="#btnRemoveOnAction" text="REMOVE" />
@@ -57,7 +57,7 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <HBox alignment="CENTER" layoutX="95.0" layoutY="320.0" spacing="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+      <HBox alignment="CENTER" layoutX="10.0" layoutY="298.0" spacing="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
          <children>
             <Button fx:id="btnSave" defaultButton="true" mnemonicParsing="false" onAction="#btnSaveOnAction" prefHeight="24.0" prefWidth="68.0" text="SAVE" />
             <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#btnDeleteOnAction" text="DELETE" />
@@ -67,7 +67,7 @@
          <children>
             <Label alignment="CENTER" text="SUPPLIER DETAILS" underline="true">
                <font>
-                  <Font size="23.0" />
+                  <Font size="15.0" />
                </font>
             </Label>
          </children>

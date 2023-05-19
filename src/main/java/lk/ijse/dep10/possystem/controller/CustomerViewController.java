@@ -8,9 +8,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import lk.ijse.dep10.possystem.db.DBConnection;
+import lk.ijse.dep10.possystem.model.BillDescription;
 import lk.ijse.dep10.possystem.model.Customer;
 import lk.ijse.dep10.possystem.model.User;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -53,6 +55,36 @@ public class CustomerViewController {
             txtAddress.setText(current.getAddress());
             lstContacts.setItems(FXCollections.observableArrayList(current.getContactList()));
         });
+
+        txtSearch.textProperty().addListener((ov, previous, current) -> {
+
+            Connection connection = DBConnection.getInstance().getConnection();
+            try {
+                Statement stm = connection.createStatement();
+                String sql = "SELECT  * FROM  Customer WHERE id LIKE  '%1$s' OR Customer.name LIKE '%1$s' OR  address LIKE '%1$s'";
+
+                sql = String.format(sql, "%" + current + "%");
+
+                ResultSet rst = stm.executeQuery(sql);
+
+                ObservableList<Customer> customerList = tblCustomers.getItems();
+                customerList.clear();
+
+                while (rst.next()) {
+                    int id = rst.getInt("id");
+                    String name = rst.getString("name");
+                    String address = rst.getString("address");
+
+
+
+                    customerList.add(new Customer(id,name,address, null));
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+        });
+
     }
 
     private void loadAllCustomers() {

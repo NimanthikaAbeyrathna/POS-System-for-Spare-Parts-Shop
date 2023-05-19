@@ -312,19 +312,22 @@ public class NewBatchScenecontroller {
 
             try {
                 Statement stm = connection.createStatement();
-                String sql = "SELECT *FROM Batches WHERE supplier_id LIKE '%1$s' OR supplier_name LIKE '%1$s' OR batch_no LIKE '%1$s' OR total LIKE '%1$s' OR date LIKE '%1$s'";
+                String sql = "SELECT *FROM Batches WHERE supplier_id LIKE '%1$s' OR supplier_name LIKE '%1$s' OR batch_no LIKE '%1$s' OR total LIKE '%1$s' OR Batches.date LIKE '%1$s'";
                 sql = String.format(sql, '%' + current + '%');
                 ResultSet rst = stm.executeQuery(sql);
 
-                tblBatchSummary.getItems().clear();
+                ObservableList<NewBatch> batchList = tblBatchSummary.getItems();
+                batchList.clear();
+
                 while (rst.next()) {
                     int supplierId = rst.getInt("supplier_id");
                     String supplierName = rst.getString("supplier_name");
                     int batchNo = rst.getInt("batch_no");
                     Date date1 = rst.getDate("date");
                     BigDecimal total = rst.getBigDecimal("total");
+
                     NewBatch newBatch = new NewBatch(supplierId, supplierName, batchNo, date1, total);
-                    tblBatchSummary.getItems().add(newBatch);
+                    batchList.add(newBatch);
                 }
 
             } catch (SQLException e) {

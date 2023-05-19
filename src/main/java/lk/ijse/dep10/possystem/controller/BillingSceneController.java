@@ -683,7 +683,13 @@ public class BillingSceneController {
         stage.show();
     }
 
-    public void btnAddItemOnAction(ActionEvent actionEvent) {
+    public void btnAddItemOnAction(ActionEvent actionEvent) throws IOException {
+        Stage stage = new Stage();
+        stage.setScene(new Scene(new FXMLLoader(getClass().getResource("/view/ItemScene.fxml")).load()));
+        stage.setTitle("Add Item");
+        stage.setMaximized(true);
+        stage.centerOnScreen();
+        stage.show();
     }
 
 

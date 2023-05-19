@@ -33,8 +33,7 @@ public class MainViewController {
 
     public void initialize(){
         User principal = (User) System.getProperties().get("principal");
-        lblUser.setText(String.format("%s: %s",
-                principal.getRole().name(), principal.getFullName()));
+        lblUser.setText(String.format(principal.getRole().name()+":"+ principal.getFullName()));
         btnMangeUsers.setVisible(principal.getRole() == User.Role.ADMIN);
 
         lblDateTime.setText(LocalDateTime.now().
@@ -60,7 +59,8 @@ public class MainViewController {
     }
 
     
-    public void btnManageItemsOnAction(ActionEvent event) {
+    public void btnManageItemsOnAction(ActionEvent event) throws IOException {
+        openNewWindow(" new Item", btnManageItems.getScene().getWindow(), "Buttons");
 
     }
 

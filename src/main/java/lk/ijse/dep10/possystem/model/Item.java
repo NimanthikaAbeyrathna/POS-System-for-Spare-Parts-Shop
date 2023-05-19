@@ -1,18 +1,15 @@
 package lk.ijse.dep10.possystem.model;
 
-<<<<<<< HEAD
-import com.mysql.cj.x.protobuf.MysqlxDatatypes;
-import lk.ijse.dep10.possystem.model.util.User;
+
+import lk.ijse.dep10.possystem.util.User;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 
-@AllArgsConstructor
+
 
 public class Item implements Serializable {
 
@@ -66,6 +63,39 @@ public class Item implements Serializable {
         this.price = price;
     }
 
+    public Item(User role, int batchNo, Long itemCode, String model, String itemName, BigDecimal netPrice, int qty,
+                BigDecimal discount, Date dateOfBought, BigDecimal sellingPrice, BigDecimal profit) {
+        this.role = role;
+        this.batchNo = batchNo;
+        this.itemCode = itemCode;
+        this.model = model;
+        this.itemName = itemName;
+        this.netPrice = netPrice;
+        this.qty = qty;
+        this.discount = discount;
+        this.dateOfBought = dateOfBought;
+        this.sellingPrice = sellingPrice;
+        this.profit = profit;
+    }
+
+    public Item(User role, int batchNo, Long itemCode, String model, String itemName,
+                BigDecimal netPrice, int qty, String consumedQty, BigDecimal price,
+                BigDecimal discount, Date dateOfBought, BigDecimal sellingPrice, BigDecimal profit) {
+        this.role = role;
+        this.batchNo = batchNo;
+        this.itemCode = itemCode;
+        this.model = model;
+        this.itemName = itemName;
+        this.netPrice = netPrice;
+        this.qty = qty;
+        this.consumedQty = consumedQty;
+        this.price = price;
+        this.discount = discount;
+        this.dateOfBought = dateOfBought;
+        this.sellingPrice = sellingPrice;
+        this.profit = profit;
+    }
+
     public BigDecimal getPrice(){
         return new BigDecimal(getConsumedQty()).multiply(sellingPrice);
     }
@@ -113,5 +143,60 @@ public class Item implements Serializable {
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
->>>>>>> origin/master
+
+    public User getRole() {
+        return role;
+    }
+
+    public void setRole(User role) {
+        this.role = role;
+    }
+
+    public int getBatchNo() {
+        return batchNo;
+    }
+
+    public void setBatchNo(int batchNo) {
+        this.batchNo = batchNo;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public BigDecimal getNetPrice() {
+        return netPrice;
+    }
+
+    public void setNetPrice(BigDecimal netPrice) {
+        this.netPrice = netPrice;
+    }
+
+    public BigDecimal getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(BigDecimal discount) {
+        this.discount = discount;
+    }
+
+    public Date getDateOfBought() {
+        return dateOfBought;
+    }
+
+    public void setDateOfBought(Date dateOfBought) {
+        this.dateOfBought = dateOfBought;
+    }
+
+    public BigDecimal getProfit() {
+        return profit;
+    }
+
+    public void setProfit(BigDecimal profit) {
+        this.profit = profit;
+    }
 }

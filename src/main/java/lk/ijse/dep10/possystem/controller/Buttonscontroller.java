@@ -35,6 +35,7 @@ public class Buttonscontroller {
         AnchorPane root = fxmlLoader.load();
         Scene scene = new Scene(root);
         stage.setScene(scene);
+        stage.setTitle("Add New Batches");
         stage.setMaximized(true);
         stage.show();
 
@@ -49,6 +50,7 @@ public class Buttonscontroller {
         AnchorPane root = fxmlLoader.load();
         Scene scene = new Scene(root);
         stage.setScene(scene);
+        stage.setTitle("Add New Items");
         stage.show();
         stage.setMaximized(true);
     }
@@ -60,6 +62,7 @@ public class Buttonscontroller {
         AnchorPane root = fxmlLoader.load();
         Scene scene = new Scene(root);
         stage.setScene(scene);
+        stage.setTitle("Add New Suppliers ");
         stage.setMaximized(true);
         stage.show();
 
@@ -70,6 +73,7 @@ public class Buttonscontroller {
         AnchorPane root = fxmlLoader.load();
         Scene scene = new Scene(root);
         stage.setScene(scene);
+        stage.setTitle("Add New Brand Names");
         stage.setMaximized(true);
         stage.show();
 
@@ -81,6 +85,7 @@ public class Buttonscontroller {
         AnchorPane root = fxmlLoader.load();
         Scene scene = new Scene(root);
         stage.setScene(scene);
+        stage.setTitle("Add New Bike Names");
         stage.setMaximized(true);
         stage.show();
     }
@@ -91,6 +96,7 @@ public class Buttonscontroller {
         AnchorPane root = fxmlLoader.load();
         Scene scene = new Scene(root);
         stage.setScene(scene);
+        stage.setTitle("Add New Categories");
         stage.setMaximized(true);
         stage.show();
     }
@@ -101,6 +107,7 @@ public class Buttonscontroller {
         AnchorPane root = fxmlLoader.load();
         Scene scene = new Scene(root);
         stage.setScene(scene);
+        stage.setTitle("Add New Parts Names");
         stage.setMaximized(true);
         stage.show();
 

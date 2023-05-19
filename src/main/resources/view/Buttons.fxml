@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="443.0" prefWidth="476.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.dep10.possystem.controller.Buttonscontroller">
+<AnchorPane prefHeight="443.0" prefWidth="476.0" stylesheets="@../css/Styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.dep10.possystem.controller.Buttonscontroller">
    <children>
       <VBox alignment="CENTER" layoutX="10.0" layoutY="172.0" spacing="50.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="100.0">
          <children>
