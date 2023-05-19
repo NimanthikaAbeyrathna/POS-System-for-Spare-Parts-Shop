@@ -51,18 +51,6 @@ VALUES (1, 'generator', 50.00, 5, 250.00),
        (2, 'key', 20.00, 10, 100.00),
        (3, 'bolt', 10.00, 10, 100.00);
 
-CREATE TABLE IF NOT EXISTS Customer
-(
-    name    VARCHAR(200) PRIMARY KEY,
-    address VARCHAR(200) NOT NULL,
-    contact VARCHAR(200) NOT NULL
-
-);
-
-
-INSERT INTO Customer
-VALUES ('kasun', 'panadura', '077-9301085'),
-       ('saman', 'kandy', '081-5656946');
 
 
 CREATE TABLE IF NOT EXISTS Loyalty
@@ -76,8 +64,33 @@ CREATE TABLE IF NOT EXISTS Loyalty
     CONSTRAINT fk_bill_date FOREIGN KEY (bill_date) REFERENCES Bills (date_time)
 );
 
+
+
+CREATE TABLE User(
+        username VARCHAR(50) PRIMARY KEY,
+        full_name VARCHAR(100) NOT NULL,
+        password VARCHAR(300) NOT NULL,
+        role ENUM('ADMIN', 'USER') NOT NULL
+);
+
+CREATE TABLE Customer(
+                         id INT PRIMARY KEY,
+                         name VARCHAR(100) NOT NULL,
+                         address VARCHAR(500) NOT NULL
+);
+
+CREATE TABLE Contact(
+                        contact VARCHAR(15) NOT NULL,
+                        customer_id INT NOT NULL,
+                        CONSTRAINT uk_contact UNIQUE KEY (contact),
+                        CONSTRAINT pk_contact PRIMARY KEY (contact, customer_id)
+);
+
+ALTER TABLE Contact ADD CONSTRAINT fk_contact FOREIGN KEY (customer_id) REFERENCES Customer (id);
+
 DROP TABLE IF EXISTS Loyalty;
 DROP TABLE IF EXISTS Customer;
 DROP TABLE IF EXISTS Bills;
 DROP TABLE IF EXISTS BillDescription;
 DROP TABLE IF EXISTS Items;
+DROP TABLE IF EXISTS User;
