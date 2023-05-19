@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="443.0" prefWidth="476.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.dep10.possystem.controller.Buttonscontroller">
+   <children>
+      <VBox alignment="CENTER" layoutX="10.0" layoutY="172.0" spacing="50.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="100.0">
+         <children>
+            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="20.0">
+               <children>
+                  <Button fx:id="btnParts" mnemonicParsing="false" onAction="#btnPartsOnAction" prefHeight="50.0" prefWidth="120.0" text="Parts Name" />
+                  <Button fx:id="listOfBikes" mnemonicParsing="false" onAction="#listOfBikesOnAction" prefHeight="50.0" prefWidth="120.0" text="List of Bikes" />
+                  <Button fx:id="btnCategory" mnemonicParsing="false" onAction="#btnCategoryOnAction" prefHeight="50.0" prefWidth="120.0" text="Category" />
+                  <Button fx:id="btnSupplier" mnemonicParsing="false" onAction="#btnSupplierOnAction" prefHeight="50.0" prefWidth="120.0" text="Supplier" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="20.0">
+               <children>
+                  <Button fx:id="btnNewBatch" mnemonicParsing="false" onAction="#btnNewBatchOnAction" prefHeight="50.0" prefWidth="120.0" text="New Batch" />
+                  <Button fx:id="btnNewItems" mnemonicParsing="false" onAction="#btnNewItemsOnActioin" prefHeight="50.0" prefWidth="120.0" text="New Items" />
+                  <Button fx:id="btnBrand" mnemonicParsing="false" onAction="#btnBrandOnAction" prefHeight="50.0" prefWidth="120.0" text="Brand Names" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
