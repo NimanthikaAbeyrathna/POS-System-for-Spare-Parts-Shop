@@ -1,55 +1,46 @@
 package lk.ijse.dep10.possystem.db;
 
-import java.io.*;
+import javafx.scene.control.Alert;
+
+import java.io.File;
+import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.Properties;
 
 public class DBConnection {
-
     private static DBConnection dbConnection;
-
     private final Connection connection;
 
     private DBConnection() {
-
-        Properties properties = new Properties();
-        File file = new File("application.properties");
         try {
+            File file = new File("application.properties");
+            Properties properties = new Properties();
             FileReader fr = new FileReader(file);
             properties.load(fr);
             fr.close();
 
-            String host = properties.getProperty("parts.host", "dep10.lk");
-            String port = properties.getProperty("parts.port", "3306");
-            String databaseName = properties.getProperty("parts.name", "spare_parats");
-            String root = properties.getProperty("parts.username", "root");
-            String password = properties.getProperty("parts.password", "Gaya@12/");
-            String query = "?createDatabaseIfNotExist=true&allowMultiQueries=true";
-            String initial = "jdbc:mysql://";
+            String host = properties.getProperty("mysql.host", "localhost");
+            String port = properties.getProperty("mysql.port", "3306");
+            String database = properties.getProperty("mysql.database", "spare_parats");
+            String username = properties.getProperty("mysql.username", "root");
+            String password = properties.getProperty("mysql.password", "Gaya/123&1994");
 
-            StringBuilder sr = new StringBuilder();
-            StringBuilder result = sr.append(initial).append(host).append(":").append(port).append("/").append(databaseName).append(query);
-            String sql = result.toString();
-
-            connection = DriverManager.getConnection(sql, root, password);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+            String url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?createDatabaseIfNotExist=true&allowMultiQueries=true";
+            connection = DriverManager.getConnection(url, username, password);
+        } catch (Exception e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Failed to obtain the database connection").showAndWait();
+            System.exit(1);
             throw new RuntimeException(e);
         }
     }
 
     public static DBConnection getInstance() {
         return (dbConnection == null) ? dbConnection = new DBConnection() : dbConnection;
-
     }
 
-    public Connection getConnection() {
-
+    public Connection getConnection(){
         return connection;
     }
 }
