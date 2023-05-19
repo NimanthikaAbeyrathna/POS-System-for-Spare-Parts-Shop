@@ -55,11 +55,11 @@ VALUES (1, 'generator', 50.00, 5, 250.00),
 
 CREATE TABLE IF NOT EXISTS Loyalty
 (
-    customer_name VARCHAR(200)   NOT NULL,
+    customer_name VARCHAR(100)   NOT NULL,
     bill_number   INT            NOT NULL,
     bill_date     DATETIME       NOT NULL,
     bill_value    DECIMAL(12, 2) NOT NULL,
-    CONSTRAINT fk_customer_name FOREIGN KEY (customer_name) REFERENCES Customer (name),
+    CONSTRAINT fk_customer_name FOREIGN KEY (customer_name) REFERENCES Customer(name) ,
     CONSTRAINT fk_bill_number FOREIGN KEY (bill_number) REFERENCES Bills (number),
     CONSTRAINT fk_bill_date FOREIGN KEY (bill_date) REFERENCES Bills (date_time)
 );
@@ -76,7 +76,8 @@ CREATE TABLE User(
 CREATE TABLE Customer(
                          id INT PRIMARY KEY,
                          name VARCHAR(100) NOT NULL,
-                         address VARCHAR(500) NOT NULL
+                         address VARCHAR(500) NOT NULL,
+                         INDEX idx_customer_name (name)
 );
 
 CREATE TABLE Contact(
@@ -94,3 +95,5 @@ DROP TABLE IF EXISTS Bills;
 DROP TABLE IF EXISTS BillDescription;
 DROP TABLE IF EXISTS Items;
 DROP TABLE IF EXISTS User;
+DROP TABLE IF EXISTS Contact;
+DROP TABLE IF EXISTS Customer;

@@ -1,7 +1,7 @@
 .root {
     -fx-font-family: Ubuntu;
     -fx-font-size: 14px;
-    -fx-background-color: white;
+    -fx-background-color: #d5b0b6;
 }
 
 .heading {
@@ -32,4 +32,35 @@
 
 .btn-menu:hover {
     -fx-background-color: rgba(211, 211, 211, 0.8);
+}
+
+.search-field {
+    -fx-background-color: rgb(234, 207, 238);
+    -fx-text-fill: rgb(0, 0, 0);
+    -fx-border-color: black;
+
+}
+
+
+
+.button{
+    -fx-background-color: #9d6e6e;
+    -fx-background-radius: 5px;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+
+}
+.button:hover{
+    -fx-background-color: #66e066;
+    -fx-cursor: hand;
+
+}
+
+
+#lblTitle{
+    -fx-text-alignment: center;
+}
+.text-area{
+    -fx-text-alignment: center;
 }

@@ -76,12 +76,16 @@ public class MainViewController {
         stage.initOwner(window);
         stage.initModality(Modality.WINDOW_MODAL);
         stage.show();
+        stage.setMaximized(true);
         stage.centerOnScreen();
     }
 
-    public void btnBillingOnAction(ActionEvent actionEvent) {
+    public void btnBillingOnAction(ActionEvent actionEvent) throws IOException {
+        openNewWindow("Bill", btnBilling.getScene().getWindow(), "BillingScene");
+
     }
 
-    public void btnLoyalityOnAction(ActionEvent actionEvent) {
+    public void btnLoyalityOnAction(ActionEvent actionEvent) throws IOException {
+        openNewWindow("Loyalty", btnLoyalty.getScene().getWindow(), "loyaltyScene");
     }
 }

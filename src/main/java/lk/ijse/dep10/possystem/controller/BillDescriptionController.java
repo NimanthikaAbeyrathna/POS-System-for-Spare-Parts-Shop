@@ -7,7 +7,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import lk.ijse.dep10.possystem.db.DbConnection;
+import lk.ijse.dep10.possystem.db.DBConnection;
 import lk.ijse.dep10.possystem.model.BillDescription;
 import java.math.BigDecimal;
 import java.sql.*;
@@ -33,7 +33,7 @@ public class BillDescriptionController {
 
 
         try {
-            Connection connection = DbConnection.getInstance().getConnection();
+            Connection connection = DBConnection.getInstance().getConnection();
             Statement stm = connection.createStatement();
 
             ResultSet resultSetBill = stm.executeQuery("SELECT * FROM BillDescription");
@@ -60,7 +60,7 @@ public class BillDescriptionController {
 
         txtSearchBar.textProperty().addListener((ov, previous, current) -> {
 
-            Connection connection = DbConnection.getInstance().getConnection();
+            Connection connection = DBConnection.getInstance().getConnection();
             try {
                 Statement stm = connection.createStatement();
                 String sql = "SELECT  * FROM  BillDescription WHERE bill_number LIKE  '%1$s' ";

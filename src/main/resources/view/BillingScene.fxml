@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="root" prefHeight="615.0" prefWidth="996.0" stylesheets="@../css/BillingSceneStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.dep10.possystem.controller.BillingSceneController">
+<AnchorPane fx:id="root" prefHeight="615.0" prefWidth="996.0" stylesheets="@../css/Styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.dep10.possystem.controller.BillingSceneController">
    <children>
       <Button fx:id="btnNewBill" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnNewBillOnAction" text="+New Bill" AnchorPane.leftAnchor="10.0" />
       <VBox layoutX="10.0" layoutY="65.0" prefHeight="72.0" prefWidth="415.0" spacing="20.0" AnchorPane.leftAnchor="10.0">

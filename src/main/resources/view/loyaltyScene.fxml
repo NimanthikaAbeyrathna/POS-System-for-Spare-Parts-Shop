@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane fx:id="root" prefHeight="565.0" prefWidth="600.0" stylesheets="@../css/BillingSceneStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.dep10.possystem.controller.LoyaltySceneController">
+<AnchorPane fx:id="root" prefHeight="565.0" prefWidth="600.0" stylesheets="@../css/Styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.dep10.possystem.controller.LoyaltySceneController">
    <children>
       <TableView fx:id="tblLoyalty" layoutX="9.0" layoutY="77.0" prefHeight="472.0" prefWidth="573.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="83.0">
         <columns>

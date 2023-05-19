@@ -7,7 +7,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import lk.ijse.dep10.possystem.db.DbConnection;
+import lk.ijse.dep10.possystem.db.DBConnection;
 import lk.ijse.dep10.possystem.model.Loyalty;
 import java.math.BigDecimal;
 import java.sql.*;
@@ -28,7 +28,7 @@ public class LoyaltySceneController {
         tblLoyalty.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("billValue"));
 
         try {
-            Connection connection = DbConnection.getInstance().getConnection();
+            Connection connection = DBConnection.getInstance().getConnection();
             Statement stm = connection.createStatement();
             ResultSet resultSet = stm.executeQuery("SELECT * FROM Loyalty");
 
@@ -51,7 +51,7 @@ public class LoyaltySceneController {
 
         txtSearchField.textProperty().addListener((ov, previous, current) -> {
 
-            Connection connection = DbConnection.getInstance().getConnection();
+            Connection connection = DBConnection.getInstance().getConnection();
             try {
                 Statement stm = connection.createStatement();
                 String sql = "SELECT  * FROM  Loyalty WHERE customer_name LIKE  '%1$s' OR  " +

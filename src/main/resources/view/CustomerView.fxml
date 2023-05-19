@@ -13,7 +13,7 @@
 <AnchorPane prefHeight="618.0" prefWidth="600.0" stylesheets="@../css/Styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.dep10.possystem.controller.CustomerViewController">
    <children>
       <Label alignment="CENTER" layoutX="288.0" layoutY="28.0" styleClass="heading" text="Manage Customers" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="25.0" />
-      <Button fx:id="btnNew" layoutX="491.0" layoutY="25.0" mnemonicParsing="false" onAction="#btnNewOnAction" prefHeight="26.0" prefWidth="95.0" text="New +" />
+      <Button fx:id="btnNew" layoutX="491.0" layoutY="25.0" mnemonicParsing="false" onAction="#btnNewOnAction" prefHeight="26.0" prefWidth="95.0" text="New +" AnchorPane.rightAnchor="14.0" />
       <VBox layoutX="64.0" layoutY="63.0" spacing="10.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="70.0">
          <children>
             <HBox spacing="10.0">
@@ -63,6 +63,9 @@
           <TableColumn prefWidth="228.0" text="Name" />
             <TableColumn prefWidth="228.0" text="Address" />
         </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
       </TableView>
       <TextField fx:id="txtSearch" alignment="CENTER" layoutX="14.0" layoutY="580.0" prefHeight="28.0" prefWidth="570.0" promptText="Enter something to search" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
    </children>

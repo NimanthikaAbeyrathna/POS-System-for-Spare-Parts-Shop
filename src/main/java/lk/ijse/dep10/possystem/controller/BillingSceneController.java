@@ -13,10 +13,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import lk.ijse.dep10.possystem.db.DbConnection;
+import lk.ijse.dep10.possystem.db.DBConnection;
 import lk.ijse.dep10.possystem.model.Bill;
 import lk.ijse.dep10.possystem.model.BillDescription;
 import lk.ijse.dep10.possystem.model.Item;
+import lk.ijse.dep10.possystem.model.User;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanArrayDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -140,7 +141,7 @@ public class BillingSceneController {
 
     private void putDataToComboBoxes() {
         try {
-            Connection connection = DbConnection.getInstance().getConnection();
+            Connection connection = DBConnection.getInstance().getConnection();
             String sql = "SELECT name FROM Customer";
             PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
@@ -158,7 +159,7 @@ public class BillingSceneController {
 
 
         try {
-            Connection connection = DbConnection.getInstance().getConnection();
+            Connection connection = DBConnection.getInstance().getConnection();
             String sql1 = "SELECT item_code FROM Items";
             String sql2 = "SELECT item_name FROM Items";
             PreparedStatement statement1 = connection.prepareStatement(sql1);
@@ -189,7 +190,7 @@ public class BillingSceneController {
         cmbSearchItems.valueProperty().addListener((ov, previous, current) -> {
 
             if (!(cmbSearchItems.getValue() == null)) {
-                Connection connection = DbConnection.getInstance().getConnection();
+                Connection connection = DBConnection.getInstance().getConnection();
                 try {
                     Statement stm = connection.createStatement();
                     String sql = "SELECT  * FROM Items WHERE item_code LIKE  '%1$s' OR  " +
@@ -220,7 +221,7 @@ public class BillingSceneController {
     private void searchBills() {
         txtSearchBills.textProperty().addListener((ov, previous, current) -> {
 
-            Connection connection = DbConnection.getInstance().getConnection();
+            Connection connection = DBConnection.getInstance().getConnection();
             try {
                 Statement stm = connection.createStatement();
                 Statement stm2 = connection.createStatement();
@@ -281,7 +282,7 @@ public class BillingSceneController {
             txtCash.setText(String.valueOf(current.getCash()));
             txtBalance.setText(String.valueOf(current.getBalance()));
 
-            Connection connection = DbConnection.getInstance().getConnection();
+            Connection connection = DBConnection.getInstance().getConnection();
 
             try {
                 PreparedStatement stmp = connection.prepareStatement("SELECT *FROM Loyalty WHERE bill_number=?");
@@ -316,7 +317,7 @@ public class BillingSceneController {
 
     private void loadAllItems() {
         try {
-            Connection connection = DbConnection.getInstance().getConnection();
+            Connection connection = DBConnection.getInstance().getConnection();
             Statement stm = connection.createStatement();
 
             ResultSet resultSetBill = stm.executeQuery("SELECT * FROM Bills");
@@ -385,8 +386,9 @@ public class BillingSceneController {
 
         txtDateTime.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
-//        User principal = (User) System.getProperties().get("principal");
-//        txtCashier.setText(String.format("%s: %s", principal.getRole().name(), principal.getFullName()));
+        User principal = (User) System.getProperties().get("principal");
+        txtCashier.setText(String.format("%s: %s", principal.getRole().name(), principal.getFullName()));
+
         cmbSearchCustomer.requestFocus();
         cmbSearchItems.requestFocus();
 
@@ -425,7 +427,7 @@ public class BillingSceneController {
             BigDecimal balance = new BigDecimal(txtBalance.getText());
 
 
-            Connection connection = DbConnection.getInstance().getConnection();
+            Connection connection = DBConnection.getInstance().getConnection();
             try {
                 Bill selectedBill = tblBills.getSelectionModel().getSelectedItem();
 
@@ -489,7 +491,7 @@ public class BillingSceneController {
                 System.out.println("failed to save bill");
             } finally {
                 try {
-                    DbConnection.getInstance().getConnection().setAutoCommit(true);
+                    DBConnection.getInstance().getConnection().setAutoCommit(true);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
@@ -526,7 +528,7 @@ public class BillingSceneController {
             if (tblBills.getSelectionModel().getSelectedItem() != null) {
 
                 try {
-                    Connection connection = DbConnection.getInstance().getConnection();
+                    Connection connection = DBConnection.getInstance().getConnection();
 
                     /*update the loyalty table*/
                     PreparedStatement ps3 = connection.prepareStatement("UPDATE Loyalty SET bill_value=? WHERE bill_number=?");
@@ -628,7 +630,7 @@ public class BillingSceneController {
 
 
     public void btnDeleteOnAction(ActionEvent actionEvent) {
-        Connection connection = DbConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getInstance().getConnection();
         try {
             Statement stm2 = connection.createStatement();
             String sql2 = "DELETE FROM BillDescription WHERE bill_number=%d";
@@ -674,7 +676,9 @@ public class BillingSceneController {
 
     public void btnAddCustomerOnAction(ActionEvent actionEvent) throws IOException {
         Stage stage = new Stage();
-        stage.setScene(new Scene(new FXMLLoader(getClass().getResource("/view/loyaltyScene.fxml")).load()));
+        stage.setScene(new Scene(new FXMLLoader(getClass().getResource("/view/CustomerView.fxml")).load()));
+        stage.setTitle("Add Customer");
+        stage.setMaximized(true);
         stage.centerOnScreen();
         stage.show();
     }
@@ -692,7 +696,7 @@ public class BillingSceneController {
             Item selectedItem = tblPrintBill.getSelectionModel().getSelectedItem();
 
             try {
-                Connection connection = DbConnection.getInstance().getConnection();
+                Connection connection = DBConnection.getInstance().getConnection();
 
                 Long itemCode = selectedItem.getItemCode();
                 int qty = Integer.parseInt(selectedItem.getConsumedQty());
