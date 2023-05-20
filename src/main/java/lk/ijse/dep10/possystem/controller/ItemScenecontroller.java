@@ -489,9 +489,7 @@ public class ItemScenecontroller {
                 BigDecimal sellingPrice = rst.getBigDecimal(14);
                 BigDecimal profit = rst.getBigDecimal(15);
 
-                String user = txtUsrAdmin.getText();
-
-                Item item = new Item(user, batchNumber, itemCode, model, itemName, netPrice, quantity, discount, date, sellingPrice, profit);
+                Item item = new Item(role, batchNumber, itemCode, model, itemName, netPrice, quantity, discount, date, sellingPrice, profit);
                 tblSummary.getItems().add(item);
             }
         } catch (SQLException e) {
@@ -554,7 +552,7 @@ public class ItemScenecontroller {
                 BigDecimal sellingPrice = rst.getBigDecimal(14);
                 BigDecimal profitPerItem = rst.getBigDecimal(15);
 
-                Item item = new Item(txtUsrAdmin.getText(), batchNumber, itemCode, model, itemName, netPrice, qty, discount, date, sellingPrice, profitPerItem);
+                Item item = new Item(role, batchNumber, itemCode, model, itemName, netPrice, qty, discount, date, sellingPrice, profitPerItem);
                 tblSummary.getItems().addAll(item);
             }
 
@@ -868,7 +866,7 @@ public class ItemScenecontroller {
             try {
                 PreparedStatement prd = connection1.prepareStatement(sqlUpdate);
 
-                prd.setString(1, item.getRole().toString());
+                prd.setString(1, txtUsrAdmin.getText());
                 prd.setInt(2, batchNo);
                 prd.setLong(3, itemCode);
                 prd.setString(4, selectedBrand);
