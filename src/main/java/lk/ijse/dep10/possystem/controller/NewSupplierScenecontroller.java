@@ -10,12 +10,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import lk.ijse.dep10.possystem.db.DBConnection;
+import lk.ijse.dep10.possystem.model.Bill;
+import lk.ijse.dep10.possystem.model.BillDescription;
 import lk.ijse.dep10.possystem.model.Supplier;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class NewSupplierScenecontroller {
@@ -50,7 +49,6 @@ public class NewSupplierScenecontroller {
     @FXML
     private TextField txtName;
 
-    ArrayList<String> list1 = new ArrayList<>();
 
     public void initialize() {
 
@@ -62,6 +60,11 @@ public class NewSupplierScenecontroller {
             btnRemove.setDisable(current == null);
         });
         loadSuppliers();
+        tblSupplierDetails.getSelectionModel().selectedItemProperty().addListener((observableValue, supplier, t1) -> {
+            if(t1!=null){
+                btnDelete.setDisable(false);
+            }
+        });
 
 //        tblSupplierDetails.getSelectionModel().selectedItemProperty().addListener((observableValue, value, current) ->{
 //            if(current!=null){
@@ -88,41 +91,43 @@ public class NewSupplierScenecontroller {
 
     private void loadSuppliers() {
         Connection connection = DBConnection.getInstance().getConnection();
+        ObservableList<Supplier> supplierList = tblSupplierDetails.getItems();
 
-        String sql = "SELECT *FROM Supplier";
         try {
+            String sql = "SELECT * FROM Supplier";
             PreparedStatement prd = connection.prepareStatement(sql);
             ResultSet rst = prd.executeQuery();
-            if (rst.next()) {
+
+            while (rst.next()) {
                 int id = rst.getInt("id");
                 String name = rst.getString("name");
                 String contact = rst.getString("contact");
-                list1.add(contact);
-                ObservableList<String> observableList = FXCollections.observableList(list1);
-                Supplier supplier = new Supplier(id, name, list1);
-                tblSupplierDetails.getItems().add(supplier);
-                Supplier selectedItem = tblSupplierDetails.getSelectionModel().getSelectedItem();
+                ArrayList<String> contacts = new ArrayList<>();
+                contacts.add(contact);
 
-
-                tblSupplierDetails.getSelectionModel().selectedItemProperty().addListener((observableValue, value, current) -> {
-                    if (current != null) {
-                        txtName.setText(name);
-                        txtId.setText(Integer.toString(id));
-                        lstContact.setItems(observableList);
-                    }
-                });
-
+                ObservableList<String> observableList = FXCollections.observableList(contacts);
+                Supplier supplier = new Supplier(id, name, contacts);
+                supplierList.add(supplier);
             }
 
+
+            tblSupplierDetails.getSelectionModel().selectedItemProperty().addListener((observableValue, value, current) -> {
+                if (current != null) {
+                    txtName.setText(current.getName());
+                    txtId.setText(String.valueOf(current.getId()));
+                    lstContact.setItems(FXCollections.observableArrayList(current.getContact()));
+                }
+            });
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
+
     private boolean isValidate() {
         boolean validate = true;
 
-        if (!(txtName.getText().matches("[A-Za-z]+"))) {
+        if (!(txtName.getText().matches("[A-Za-z ]+"))) {
             txtName.requestFocus();
             txtName.selectAll();
             validate = false;
@@ -150,6 +155,35 @@ public class NewSupplierScenecontroller {
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
 
+
+            Connection connection = DBConnection.getInstance().getConnection();
+            try {
+                Statement stmt = connection.createStatement();
+                int supplierId = tblSupplierDetails.getSelectionModel().getSelectedItem().getId();
+
+                // Delete items associated with the supplier
+                String deleteItemsSql = "DELETE FROM Items WHERE batch_num IN (SELECT batch_no FROM Batches WHERE supplier_id = %d)";
+                deleteItemsSql = String.format(deleteItemsSql, supplierId);
+                stmt.executeUpdate(deleteItemsSql);
+
+                // Delete batches associated with the supplier
+                String deleteBatchesSql = "DELETE FROM Batches WHERE supplier_id = %d";
+                deleteBatchesSql = String.format(deleteBatchesSql, supplierId);
+                stmt.executeUpdate(deleteBatchesSql);
+
+                // Delete the supplier
+                String deleteSupplierSql = "DELETE FROM Supplier WHERE id = %d";
+                deleteSupplierSql = String.format(deleteSupplierSql, supplierId);
+                stmt.executeUpdate(deleteSupplierSql);
+
+                tblSupplierDetails.getItems().remove(tblSupplierDetails.getSelectionModel().getSelectedItem());
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("Failed to delete Supplier");
+            }
+
+
+
     }
 
     @FXML
@@ -175,15 +209,13 @@ public class NewSupplierScenecontroller {
         }
         Supplier selectedItem = tblSupplierDetails.getSelectionModel().getSelectedItem();
         Connection connection = DBConnection.getInstance().getConnection();
+
         int id = Integer.parseInt(txtId.getText());
         String name = txtName.getText();
         ObservableList<String> items = lstContact.getItems();
         ArrayList<String> list = new ArrayList<>(items);
-        if (selectedItem == null) {
-            Supplier supplier = new Supplier(id, name, list);
-            tblSupplierDetails.getItems().add(supplier);
-            btnNewSupplier.fire();
 
+        if (selectedItem == null) {
             String sql = "INSERT INTO Supplier (id, name, contact) VALUES ('%d','%s','%s')";
             sql = String.format(sql, id, name, list);
             try {
@@ -192,17 +224,20 @@ public class NewSupplierScenecontroller {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
+            Supplier supplier = new Supplier(id, name, list);
+            tblSupplierDetails.getItems().add(supplier);
+            btnNewSupplier.fire();
         } else {
-            tblSupplierDetails.getItems().remove(selectedItem);
-            Supplier supplier1 = new Supplier(id, name, list);
-            tblSupplierDetails.getItems().add(supplier1);
 
-
-            String sqlUpdate = "UPDATE Supplier SET name='%s',contact='%s' WHERE id='%d'";
-            sqlUpdate = String.format(sqlUpdate, name, list, id);
             try {
+                String sqlUpdate = "UPDATE Supplier SET name='%s',contact='%s' WHERE id='%d'";
+                sqlUpdate = String.format(sqlUpdate, name, list, id);
                 PreparedStatement prdUpdate = connection.prepareStatement(sqlUpdate);
                 prdUpdate.executeUpdate();
+
+                Supplier supplier = new Supplier(id, name,list);
+                int selectedSupplierIndex = tblSupplierDetails.getSelectionModel().getSelectedIndex();
+                tblSupplierDetails.getItems().set(selectedSupplierIndex, supplier);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

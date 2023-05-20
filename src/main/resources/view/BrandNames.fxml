@@ -10,7 +10,7 @@
 
 <AnchorPane prefHeight="285.0" prefWidth="319.0" stylesheets="@../css/Styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.dep10.possystem.controller.BrandNamescontroller">
    <children>
-      <TextField fx:id="txtInput" alignment="TOP_CENTER" layoutX="14.0" layoutY="37.0" prefHeight="24.0" prefWidth="224.0" promptText="Discovery125" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" />
+      <TextField fx:id="txtInput" alignment="TOP_CENTER" layoutX="14.0" layoutY="37.0" prefHeight="24.0" prefWidth="224.0" promptText="Eg : Yamaha" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" />
       <Button fx:id="btnAdd" defaultButton="true" layoutX="241.0" layoutY="85.0" mnemonicParsing="false" onAction="#btnAddOnAction" prefHeight="24.0" prefWidth="68.0" text="ADD" AnchorPane.rightAnchor="7.0" />
       <TableView fx:id="tblBrand" layoutX="7.0" layoutY="73.0" prefHeight="200.0" prefWidth="231.0" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="81.0" AnchorPane.topAnchor="73.0">
         <columns>
