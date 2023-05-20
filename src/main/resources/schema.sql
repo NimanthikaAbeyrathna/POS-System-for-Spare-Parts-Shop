@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS Parts(
 );
 
 CREATE TABLE IF NOT EXISTS Items(
-                                    role ENUM('ADMIN','USER') NOT NULL ,
+                                    role VARCHAR(100) NOT NULL ,
                                     batch_num INT NOT NULL ,
                                     item_code BIGINT  PRIMARY KEY ,
                                     brand_name VARCHAR(300) NOT NULL ,

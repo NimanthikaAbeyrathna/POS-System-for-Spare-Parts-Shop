@@ -19,7 +19,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import lk.ijse.dep10.possystem.db.DBConnection;
 import lk.ijse.dep10.possystem.model.Item;
-import lk.ijse.dep10.possystem.util.User;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
@@ -258,6 +257,9 @@ public class ItemScenecontroller {
                 searchItem(current);
 
         });
+
+        lk.ijse.dep10.possystem.model.User principal = (lk.ijse.dep10.possystem.model.User) System.getProperties().get("principal");
+        txtUsrAdmin.setText(String.format("%s: %s", principal.getRole().name(), principal.getFullName()));
     }
 
     private void setDate(String batchNumber) {
@@ -487,7 +489,7 @@ public class ItemScenecontroller {
                 BigDecimal sellingPrice = rst.getBigDecimal(14);
                 BigDecimal profit = rst.getBigDecimal(15);
 
-                User user = User.valueOf(role);
+                String user = txtUsrAdmin.getText();
 
                 Item item = new Item(user, batchNumber, itemCode, model, itemName, netPrice, quantity, discount, date, sellingPrice, profit);
                 tblSummary.getItems().add(item);
@@ -552,7 +554,7 @@ public class ItemScenecontroller {
                 BigDecimal sellingPrice = rst.getBigDecimal(14);
                 BigDecimal profitPerItem = rst.getBigDecimal(15);
 
-                Item item = new Item(User.valueOf(role), batchNumber, itemCode, model, itemName, netPrice, qty, discount, date, sellingPrice, profitPerItem);
+                Item item = new Item(txtUsrAdmin.getText(), batchNumber, itemCode, model, itemName, netPrice, qty, discount, date, sellingPrice, profitPerItem);
                 tblSummary.getItems().addAll(item);
             }
 
@@ -796,16 +798,7 @@ public class ItemScenecontroller {
         }
     }
 
-    private User user() {
-        User userType = null;
-        String typeOfUser = txtUsrAdmin.getText();
-        if (typeOfUser.equals("ADMIN")) {
-            userType = User.ADMIN;
-        } else {
-            userType = User.USER;
-        }
-        return userType;
-    }
+
 
     @FXML
     void btnSaveOnAction(ActionEvent event) {
@@ -833,16 +826,18 @@ public class ItemScenecontroller {
         String discount = txtDiscount.getText();
         BigDecimal discount1 = new BigDecimal(discount);
         Date boughtDate = Date.valueOf(dtpBought.getValue());
+        BigDecimal sellingPrice= sellingPrice();
+        BigDecimal price2 = sellingPrice.multiply(new BigDecimal(quantity));
 
-        Item item = new Item(user(), batchNo, itemCode, model, itemName, netPrice, quantity, discount1, boughtDate, sellingPrice(), profitPerItem());
+        Item item = new Item(txtUsrAdmin.getText(), batchNo, itemCode, model, itemName, netPrice, quantity, discount1, boughtDate, sellingPrice(), profitPerItem());
 
         Item selectedItem = tblSummary.getSelectionModel().getSelectedItem();
         if (selectedItem == null) {
             Connection connection = DBConnection.getInstance().getConnection();
-            String sql = "INSERT INTO Items (role, batch_num, item_code,brand_name,parts_category, model, item_name, supplier_price,  net_price, qty, discount,profit_percentage, date_bought, selling_price, profit) value (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            String sql = "INSERT INTO Items (role, batch_num, item_code,brand_name,parts_category, model, item_name, supplier_price,  net_price, qty, discount,profit_percentage, date_bought, selling_price, profit,price) value (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             try {
                 PreparedStatement prd = connection.prepareStatement(sql);
-                prd.setString(1, item.getRole().toString());
+                prd.setString(1, txtUsrAdmin.getText());
                 prd.setInt(2, batchNo);
                 prd.setLong(3, itemCode);
                 prd.setString(4, selectedBrand);
@@ -857,6 +852,7 @@ public class ItemScenecontroller {
                 prd.setDate(13, boughtDate);
                 prd.setBigDecimal(14, sellingPrice());
                 prd.setBigDecimal(15, profitPerItem());
+                prd.setBigDecimal(16,price2);
 
                 tblSummary.getItems().add(item);
                 prd.executeUpdate();
@@ -865,7 +861,7 @@ public class ItemScenecontroller {
                 throw new RuntimeException(e);
             }
         } else {
-            String sqlUpdate = "UPDATE Items SET role=?,batch_num=?,item_code=?,brand_name=?, parts_category=?,model=?,item_name=?,supplier_price=?, net_price=?,qty=?,discount=?,profit_percentage=?, date_bought=?,selling_price=?,profit=? WHERE item_code=?";
+            String sqlUpdate = "UPDATE Items SET role=?,batch_num=?,item_code=?,brand_name=?, parts_category=?,model=?,item_name=?,supplier_price=?, net_price=?,qty=?,discount=?,profit_percentage=?, date_bought=?,selling_price=?,profit=?,price=? WHERE item_code=?";
             Connection connection1 = DBConnection.getInstance().getConnection();
             Long itemCode1 = selectedItem.getItemCode();
 
@@ -887,7 +883,8 @@ public class ItemScenecontroller {
                 prd.setDate(13, boughtDate);
                 prd.setBigDecimal(14, sellingPrice());
                 prd.setBigDecimal(15, profitPerItem());
-                prd.setLong(16, itemCode1);
+                prd.setBigDecimal(16,price2);
+                prd.setLong(17, itemCode1);
 
                 tblSummary.getItems().remove(selectedItem);
                 tblSummary.getItems().add(item);

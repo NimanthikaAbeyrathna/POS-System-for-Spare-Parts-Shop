@@ -1,9 +1,6 @@
 package lk.ijse.dep10.possystem.model;
 
 
-import lk.ijse.dep10.possystem.util.User;
-import lombok.AllArgsConstructor;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -13,7 +10,7 @@ import java.util.Date;
 
 public class Item implements Serializable {
 
-    private User role;
+    private String role;
     private int batchNo;
     private Long itemCode;
     private String model;
@@ -63,7 +60,7 @@ public class Item implements Serializable {
         this.price = price;
     }
 
-    public Item(User role, int batchNo, Long itemCode, String model, String itemName, BigDecimal netPrice, int qty,
+    public Item(String role, int batchNo, Long itemCode, String model, String itemName, BigDecimal netPrice, int qty,
                 BigDecimal discount, Date dateOfBought, BigDecimal sellingPrice, BigDecimal profit) {
         this.role = role;
         this.batchNo = batchNo;
@@ -78,7 +75,7 @@ public class Item implements Serializable {
         this.profit = profit;
     }
 
-    public Item(User role, int batchNo, Long itemCode, String model, String itemName,
+    public Item(String role, int batchNo, Long itemCode, String model, String itemName,
                 BigDecimal netPrice, int qty, String consumedQty, BigDecimal price,
                 BigDecimal discount, Date dateOfBought, BigDecimal sellingPrice, BigDecimal profit) {
         this.role = role;
@@ -144,13 +141,6 @@ public class Item implements Serializable {
         this.price = price;
     }
 
-    public User getRole() {
-        return role;
-    }
-
-    public void setRole(User role) {
-        this.role = role;
-    }
 
     public int getBatchNo() {
         return batchNo;
@@ -198,5 +188,13 @@ public class Item implements Serializable {
 
     public void setProfit(BigDecimal profit) {
         this.profit = profit;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

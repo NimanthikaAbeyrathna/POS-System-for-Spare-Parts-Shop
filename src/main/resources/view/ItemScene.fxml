@@ -118,7 +118,7 @@
          </children>
       </VBox>
       <BorderPane layoutX="305.0" layoutY="110.0" style="-fx-border-color: black;" />
-      <TableView fx:id="tblSummary" layoutX="12.0" layoutY="486.0" prefHeight="106.0" prefWidth="1023.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="486.0">
+      <TableView fx:id="tblSummary" editable="true" layoutX="12.0" layoutY="486.0" prefHeight="106.0" prefWidth="1023.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="486.0">
         <columns>
             <TableColumn prefWidth="124.0" text="ADMIN/USER" />
           <TableColumn prefWidth="133.0" text="BATCH NO" />
@@ -129,14 +129,14 @@
             <TableColumn prefWidth="82.0" text="QTY" />
             <TableColumn prefWidth="108.0" text="DISCOUNT" />
             <TableColumn prefWidth="142.0" text="DATE OF BOUGHT" />
-            <TableColumn prefWidth="122.0" text="SELLING PRICE" />
-            <TableColumn prefWidth="106.0" text="PROFIT PER ITEM" />
+            <TableColumn prefWidth="125.0" text="SELLING PRICE" />
+            <TableColumn prefWidth="109.0" text="PROFIT PER ITEM" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <HBox layoutX="387.0" layoutY="419.0" spacing="20.0">
+      <HBox layoutX="207.0" layoutY="419.0" prefHeight="25.0" prefWidth="431.0" spacing="60.0">
          <children>
             <Button fx:id="btnSave" defaultButton="true" mnemonicParsing="false" onAction="#btnSaveOnAction" prefHeight="24.0" prefWidth="68.0" text="SAVE" />
             <Button fx:id="btnRemove" mnemonicParsing="false" onAction="#btnRemoveOnAction" text="REMOVE" />
