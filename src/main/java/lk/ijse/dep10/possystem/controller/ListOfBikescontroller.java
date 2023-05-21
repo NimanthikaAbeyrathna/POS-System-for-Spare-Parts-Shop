@@ -97,7 +97,7 @@ public class ListOfBikescontroller {
 
     private boolean dataValidation() {
         boolean dataValidate = true;
-        if (!(txtInput.getText().matches("^[A-Z][a-z]+[-][0-9]{2,3} ?([a-z]+|[A-Z]+)? ?([a-z]+|[A-Z]+)?"))) {
+        if (!(txtInput.getText().matches("[A-Za-z ]+-[0-9]{2,3} ?([a-z]+|[A-Z]+)? ?([a-z]+|[A-Z]+)?"))) {
             txtInput.requestFocus();
             txtInput.clear();
             Alert alert = new Alert(Alert.AlertType.ERROR, "Please Enter the Bike Name in Correct Format");

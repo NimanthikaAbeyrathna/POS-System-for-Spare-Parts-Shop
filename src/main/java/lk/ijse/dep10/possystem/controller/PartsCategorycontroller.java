@@ -89,9 +89,9 @@ public class PartsCategorycontroller {
     private boolean categoryValidation() {
         boolean category = true;
 
-        if (!(txtInput.getText().matches("^[A-Z][a-z]+$"))) {
+        if (!(txtInput.getText().matches("[A-Za-z ]+"))) {
             System.out.println("notMatch");
-            Alert alert = new Alert(Alert.AlertType.ERROR, "First Letter Should be Capital");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Category name is empty");
             alert.showAndWait();
             txtInput.requestFocus();
             txtInput.clear();

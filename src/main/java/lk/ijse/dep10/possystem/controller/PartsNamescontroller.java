@@ -100,7 +100,7 @@ public class PartsNamescontroller {
     private boolean dataValidation() {
         boolean dataValid = true;
         String itemName = txtInput.getText();
-        if (!(itemName.matches("^[A-Za-z]+ ?[a-z]+"))) {
+        if (!(itemName.matches("[A-Za-z ]+"))) {
             txtInput.clear();
             txtInput.requestFocus();
             Alert alert = new Alert(Alert.AlertType.ERROR, "please add correct name");

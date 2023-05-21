@@ -122,7 +122,7 @@ public class ItemScenecontroller {
         tblSummary.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("model"));
         tblSummary.getColumns().get(4).setCellValueFactory(new PropertyValueFactory<>("itemName"));
         tblSummary.getColumns().get(5).setCellValueFactory(new PropertyValueFactory<>("netPrice"));
-        tblSummary.getColumns().get(6).setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        tblSummary.getColumns().get(6).setCellValueFactory(new PropertyValueFactory<>("qty"));
         tblSummary.getColumns().get(7).setCellValueFactory(new PropertyValueFactory<>("discount"));
         tblSummary.getColumns().get(8).setCellValueFactory(new PropertyValueFactory<>("dateOfBought"));
         tblSummary.getColumns().get(9).setCellValueFactory(new PropertyValueFactory<>("sellingPrice"));
