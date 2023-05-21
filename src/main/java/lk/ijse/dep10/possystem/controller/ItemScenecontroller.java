@@ -33,6 +33,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -129,24 +130,17 @@ public class ItemScenecontroller {
         tblSummary.getColumns().get(10).setCellValueFactory(new PropertyValueFactory<>("profit"));
 
         txtDiscount.textProperty().addListener((observableValue, s, current) -> {
-            if (current.matches("\\d+(?:\\.\\d{2})?")) {
-                txtNetPrice.setText(netPrice());
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "please enter Positive values and do not enter !@#$%^ any of symbols");
-                alert.showAndWait();
 
-            }
+            txtNetPrice.setText(netPrice());
+
         });
 
+
         txtProfitPercentage.textProperty().addListener((observableValue, s, current) -> {
-            if (current.matches("\\d+(?:\\.\\d{2})?")) {
-                txtSellingPrice.setText(sellingPriceFinal());
 
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "please enter Positive values and do not enter !@#$%^ any of symbols");
-                alert.showAndWait();
+            txtSellingPrice.setText(sellingPriceFinal());
 
-            }
+
         });
 
         txtSellingPrice.textProperty().addListener((observableValue, s, current) -> {
@@ -513,7 +507,7 @@ public class ItemScenecontroller {
     }
 
     private BigDecimal sellingPrice() {
-        BigDecimal value = BigDecimal.valueOf(100.00);
+        BigDecimal value = BigDecimal.valueOf(100);
         String netPrice = txtNetPrice.getText();
         BigDecimal netPriceDecimal = new BigDecimal(netPrice);
 
@@ -523,7 +517,7 @@ public class ItemScenecontroller {
         BigDecimal divided = profitPercentage.divide(value);
         BigDecimal sellingPrice = divided.multiply(netPriceDecimal).add(netPriceDecimal);
 
-        return sellingPrice;
+        return sellingPrice.setScale(2, RoundingMode.HALF_UP);
     }
 
     private void searchItem(String searchItems) {
@@ -562,13 +556,14 @@ public class ItemScenecontroller {
     }
 
     private BigDecimal profitPerItem() {
-        BigDecimal profitPerItem = BigDecimal.valueOf(0.00);
+        BigDecimal profitPerItem = BigDecimal.valueOf(0);
         if (netPrice() != null) {
             BigDecimal netPrice = new BigDecimal(netPrice());
             BigDecimal sellingPrice = new BigDecimal(sellingPriceFinal());
             profitPerItem = sellingPrice.subtract(netPrice);
+
         }
-        return profitPerItem;
+        return profitPerItem.setScale(2, RoundingMode.HALF_UP);
 
     }
 
@@ -672,7 +667,7 @@ public class ItemScenecontroller {
 
             txtSupplierPrice.setText(collection[2]);
             cmbBrand.setValue(collection[0]);
-            txtUsrAdmin.setText(item.getRole().toString());
+            txtUsrAdmin.setText(item.getRole());
             bikeModel.setValue(item.getModel());
             partsCategory.setValue(collection[1]);
 
@@ -680,12 +675,12 @@ public class ItemScenecontroller {
                 lstSelectedPart.getItems().clear();
                 lstSelectedPart.getItems().add(collection[3]);
             }
-            txtNetPrice.setText(item.getNetPrice().toString());
+            txtNetPrice.setText(item.getNetPrice().setScale(2, RoundingMode.HALF_UP).toString());
             txtDiscount.setText(item.getDiscount().toString());
             txtProfitPercentage.setText(collection[4]);
             txtQuantity.setText(Integer.toString(item.getQty()));
             dtpBought.setValue(localDate);
-            txtSellingPrice.setText(item.getSellingPrice().toString());
+            txtSellingPrice.setText(item.getSellingPrice().setScale(2, RoundingMode.HALF_UP).toString());
             txtProfit.setText(item.getProfit().toString());
 
         } catch (SQLException e) {
@@ -725,6 +720,7 @@ public class ItemScenecontroller {
         txtBatchNo.clear();
         txtUsrAdmin.clear();
         imgBarcode.setImage(null);
+        bikeModel.getItems().clear();
 
     }
 
@@ -923,21 +919,17 @@ public class ItemScenecontroller {
         String[] priceList = new String[1];
         String supplierPrice = txtSupplierPrice.getText();
         String discount = txtDiscount.getText();
-        if (discount.matches("\\d+(?:\\.\\d{2})?") && supplierPrice.matches("\\d+(.?\\d+)")) {
+        if (discount.matches("\\d+(?:.\\d+)?") && supplierPrice.matches("\\d+(?:.\\d+)?")) {
             BigDecimal profitPercentage = new BigDecimal(discount);
             BigDecimal supplierGivePrice = new BigDecimal(supplierPrice);
             BigDecimal value = BigDecimal.valueOf(100.00);
             BigDecimal divide = profitPercentage.divide(value);
             System.out.println(divide);
             BigDecimal result = divide.multiply(supplierGivePrice);
-            BigDecimal subtract = supplierGivePrice.subtract(result);
+            BigDecimal subtract = supplierGivePrice.subtract(result).setScale(2, RoundingMode.HALF_UP);
             String price = subtract.toString();
             priceList[0] = price;
 
-        } else {
-
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Please Enter the price in correct format");
-            alert.showAndWait();
         }
         return priceList[0];
     }
@@ -950,17 +942,13 @@ public class ItemScenecontroller {
         if (profitPercentage.matches("\\d+(?:\\.\\d{2})?")) {
             BigDecimal valueOfProfitPercentage = new BigDecimal(profitPercentage);
             BigDecimal subNetPrice = new BigDecimal(netPrice);
-            BigDecimal value = BigDecimal.valueOf(100.00);
+            BigDecimal value = BigDecimal.valueOf(100);
             BigDecimal divide = valueOfProfitPercentage.divide(value);
             BigDecimal result = divide.multiply(subNetPrice);
-            BigDecimal totalSellingPrice = subNetPrice.add(result);
+            BigDecimal totalSellingPrice = subNetPrice.add(result).setScale(2, RoundingMode.HALF_UP);
             String price = totalSellingPrice.toString();
             sellingPriceList[0] = price;
 
-        } else {
-
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Please Enter the price in correct format");
-            alert.showAndWait();
         }
         return sellingPriceList[0];
     }

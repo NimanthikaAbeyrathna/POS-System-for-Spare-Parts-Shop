@@ -30,7 +30,7 @@
                <children>
                   <Label prefWidth="100.0" text="ITEM CODE" />
                   <TextField fx:id="txtItemCode" editable="false" prefHeight="24.0" prefWidth="246.0" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="btnNew" mnemonicParsing="false" onAction="#btnNewOnAction" text="+" />
+                  <Button fx:id="btnNew" defaultButton="true" mnemonicParsing="false" onAction="#btnNewOnAction" text="+" />
                </children>
             </HBox>
             <HBox spacing="20.0">
@@ -138,7 +138,7 @@
       </TableView>
       <HBox layoutX="207.0" layoutY="419.0" prefHeight="25.0" prefWidth="431.0" spacing="60.0">
          <children>
-            <Button fx:id="btnSave" defaultButton="true" mnemonicParsing="false" onAction="#btnSaveOnAction" prefHeight="24.0" prefWidth="68.0" text="SAVE" />
+            <Button fx:id="btnSave" mnemonicParsing="false" onAction="#btnSaveOnAction" prefHeight="24.0" prefWidth="68.0" text="SAVE" />
             <Button fx:id="btnRemove" mnemonicParsing="false" onAction="#btnRemoveOnAction" text="REMOVE" />
             <Button fx:id="btnClearAll" mnemonicParsing="false" onAction="#btnClearAllOnAction" text="Clear All" />
          </children>
