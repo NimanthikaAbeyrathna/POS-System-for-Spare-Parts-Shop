@@ -133,24 +133,41 @@ public class PartsNamescontroller {
         PartsNames selectedItem2 = tblItems.getSelectionModel().getSelectedItem();
 
         if (selectedItem2 == null) {
-            String sql = "INSERT INTO Parts (parts_category, parts_type) VALUES (?,?)";
-            Connection connection = DBConnection.getInstance().getConnection();
+
             try {
+                Connection connection = DBConnection.getInstance().getConnection();
+                connection.setAutoCommit(false);
+
+                String sql = "INSERT INTO Parts (parts_category, parts_type) VALUES (?,?)";
                 PreparedStatement prd = connection.prepareStatement(sql);
                 prd.setString(1, selectedItem.toString());
                 prd.setString(2, item);
                 tblItems.getItems().add(nameOfItem);
                 txtInput.clear();
                 prd.executeUpdate();
-            } catch (SQLException e) {
+                connection.commit();
+            } catch (Throwable e) {
+                try {
+                    DBConnection.getInstance().getConnection().rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
                 e.printStackTrace();
-                throw new RuntimeException(e);
+                new Alert(Alert.AlertType.ERROR, "Failed to save the part name, try again!").show();
+            } finally {
+                try {
+                    DBConnection.getInstance().getConnection().setAutoCommit(true);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         } else {
 
-            String sqlUpdate = "UPDATE Parts SET parts_category=? , parts_type=? WHERE parts_type=?";
-            Connection connection1 = DBConnection.getInstance().getConnection();
             try {
+                Connection connection1 = DBConnection.getInstance().getConnection();
+                connection1.setAutoCommit(false);
+
+                String sqlUpdate = "UPDATE Parts SET parts_category=? , parts_type=? WHERE parts_type=?";
                 PreparedStatement prd1 = connection1.prepareStatement(sqlUpdate);
                 prd1.setString(1, selectedItem.toString());
                 prd1.setString(2, item);
@@ -158,10 +175,22 @@ public class PartsNamescontroller {
                 tblItems.getItems().add(nameOfItem);
                 txtInput.clear();
                 prd1.executeUpdate();
+                connection1.commit();
 
-            } catch (SQLException e) {
+            } catch (Throwable e) {
+                try {
+                    DBConnection.getInstance().getConnection().rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
                 e.printStackTrace();
-                throw new RuntimeException(e);
+                new Alert(Alert.AlertType.ERROR, "Failed to update the part name, try again!").show();
+            } finally {
+                try {
+                    DBConnection.getInstance().getConnection().setAutoCommit(true);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
@@ -171,17 +200,30 @@ public class PartsNamescontroller {
 
         PartsNames selectedItem = tblItems.getSelectionModel().getSelectedItem();
 
-
-        String sql = "DELETE FROM Parts WHERE parts_type=?";
-
-        Connection connection = DBConnection.getInstance().getConnection();
         try {
+            Connection connection = DBConnection.getInstance().getConnection();
+            connection.setAutoCommit(false);
+
+            String sql = "DELETE FROM Parts WHERE parts_type=?";
             PreparedStatement prd = connection.prepareStatement(sql);
             prd.setString(1, selectedItem.getItemName());
             tblItems.getItems().remove(selectedItem);
             prd.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            connection.commit();
+        } catch (Throwable e) {
+            try {
+                DBConnection.getInstance().getConnection().rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Failed to delete the part name, try again!").show();
+        } finally {
+            try {
+                DBConnection.getInstance().getConnection().setAutoCommit(true);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

@@ -161,60 +161,7 @@ public class ItemScenecontroller {
             }
         });
 
-//        txtItemCode.textProperty().addListener((observableValue, s, current) ->{
-//            if(current!=null) {
-//
-//            }
-//        } );
 
-        cmbBrand.getItems().addAll(brands());
-
-        cmbBrand.getSelectionModel().selectedItemProperty().addListener((observableValue, previous, current) -> {
-//            if (previous != null) {
-//                bikeModel.getItems().clear();
-//
-//            }
-            if (current != null) {
-                bikeModel.getItems().clear();
-                bikeModel.getItems().addAll(listOfBikes());
-                bikeModel.requestFocus();
-            }
-        });
-
-        bikeModel.getSelectionModel().selectedItemProperty().addListener((observableValue, previous, current) -> {
-//            if (previous != null) {
-//                partsCategory.getItems().clear();
-//            }
-            if (current != null) {
-                partsCategory.getItems().clear();
-                partsCategory.getItems().addAll(categoryList());
-                partsCategory.requestFocus();
-            }
-        });
-
-        partsCategory.getSelectionModel().selectedItemProperty().addListener((observableValue, previous, current) -> {
-//            if (previous != null) {
-//                lstParts.getItems().clear();
-//                lstSelectedPart.getItems().clear();
-//            }
-            if (current != null) {
-                lstParts.getItems().clear();
-                lstSelectedPart.getItems().clear();
-                lstParts.getItems().addAll(addPartsToSelection());
-            }
-        });
-
-        lstSelectedPart.getSelectionModel().selectedItemProperty().addListener((observableValue, s, current) -> {
-
-            if (current != null) {
-                btnBack.setDisable(false);
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Please Select a Item");
-                alert.showAndWait();
-                return;
-            }
-
-        });
         dtpDate.setValue(LocalDate.now());
 
         txtBatchNo.textProperty().addListener((observableValue, s, current) -> {
@@ -243,18 +190,66 @@ public class ItemScenecontroller {
         });
 
         generateBarCode();
-        txtItemCode.textProperty().addListener(c -> generateBarCode());
         initializeJasperReport();
+        txtItemCode.textProperty().addListener((observableValue, s, current) -> {
+            generateBarCode();
+
+
+        });
+
 
         txtSearch.textProperty().addListener((observableValue, s, current) -> {
             if (current != null)
                 searchItem(current);
 
+
         });
 
         lk.ijse.dep10.possystem.model.User principal = (lk.ijse.dep10.possystem.model.User) System.getProperties().get("principal");
         txtUsrAdmin.setText(String.format("%s: %s", principal.getRole().name(), principal.getFullName()));
+        cmbBrand.getItems().addAll(brands());
+
+        cmbBrand.getSelectionModel().selectedItemProperty().addListener((observableValue, previous, current) -> {
+
+            if (current != null) {
+                bikeModel.getItems().clear();
+                bikeModel.getItems().addAll(listOfBikes());
+                bikeModel.requestFocus();
+            }
+        });
+
+        bikeModel.getSelectionModel().selectedItemProperty().addListener((observableValue, previous, current) -> {
+
+            if (current != null) {
+                partsCategory.getItems().clear();
+                partsCategory.getItems().addAll(categoryList());
+                partsCategory.requestFocus();
+            }
+        });
+
+        partsCategory.getSelectionModel().selectedItemProperty().addListener((observableValue, previous, current) -> {
+
+            if (current != null) {
+                lstParts.getItems().clear();
+                lstSelectedPart.getItems().clear();
+                lstParts.getItems().addAll(addPartsToSelection());
+            }
+        });
+
+        lstSelectedPart.getSelectionModel().selectedItemProperty().addListener((observableValue, s, current) -> {
+
+            if (current != null) {
+                btnBack.setDisable(false);
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Please Select a Item");
+                alert.showAndWait();
+                return;
+            }
+
+        });
+
     }
+
 
     private void setDate(String batchNumber) {
         ArrayList<String> dates = new ArrayList<>();
@@ -377,6 +372,7 @@ public class ItemScenecontroller {
 
     private ArrayList<String> brands() {
         ArrayList<String> brandsOfBikes = new ArrayList<>();
+
         String sql = "SELECT *FROM Brands";
 
         Connection connection = DBConnection.getInstance().getConnection();
@@ -386,8 +382,10 @@ public class ItemScenecontroller {
 
             while (rst.next()) {
                 String brandName = rst.getString(1);
-                //BrandNames brandNames = new BrandNames(brandName);
+
                 brandsOfBikes.add(brandName);
+
+
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -744,7 +742,7 @@ public class ItemScenecontroller {
         if (itemCodeValidation()) {
             cmbBrand.requestFocus();
         }
-//        cmbBrand.getItems().addAll(brands());
+
     }
 
     @FXML
@@ -763,13 +761,13 @@ public class ItemScenecontroller {
             JasperViewer.viewReport(jasperPrint, false);
 
             Printer defaultPrinter = Printer.getDefaultPrinter();
-            if (defaultPrinter==null){
-                new Alert(Alert.AlertType.ERROR,"no printer has been configured").showAndWait();
+            if (defaultPrinter == null) {
+                new Alert(Alert.AlertType.ERROR, "no printer has been configured").showAndWait();
                 return;
             }
-            JasperPrintManager.printReport(jasperPrint,true);
+            JasperPrintManager.printReport(jasperPrint, true);
 
-        }catch (JRException e) {
+        } catch (JRException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
@@ -781,17 +779,33 @@ public class ItemScenecontroller {
         Item selectedItem = tblSummary.getSelectionModel().getSelectedItem();
         tblSummary.getItems().remove(selectedItem);
 
-        String sql = "DELETE FROM Items WHERE item_code=?";
-        Connection connection = DBConnection.getInstance().getConnection();
         try {
+            Connection connection = DBConnection.getInstance().getConnection();
+            connection.setAutoCommit(false);
+
+            String sql = "DELETE FROM Items WHERE item_code=?";
             PreparedStatement prd = connection.prepareStatement(sql);
             prd.setLong(1, selectedItem.getItemCode());
             prd.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            btnClearAll.fire();
+
+            connection.commit();
+        } catch (Throwable e) {
+            try {
+                DBConnection.getInstance().getConnection().rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Failed to delete the item, try again!").show();
+        } finally {
+            try {
+                DBConnection.getInstance().getConnection().setAutoCommit(true);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
-
 
 
     @FXML
@@ -820,16 +834,19 @@ public class ItemScenecontroller {
         String discount = txtDiscount.getText();
         BigDecimal discount1 = new BigDecimal(discount);
         Date boughtDate = Date.valueOf(dtpBought.getValue());
-        BigDecimal sellingPrice= sellingPrice();
+        BigDecimal sellingPrice = sellingPrice();
         BigDecimal price2 = sellingPrice.multiply(new BigDecimal(quantity));
 
         Item item = new Item(txtUsrAdmin.getText(), batchNo, itemCode, model, itemName, netPrice, quantity, discount1, boughtDate, sellingPrice(), profitPerItem());
 
         Item selectedItem = tblSummary.getSelectionModel().getSelectedItem();
         if (selectedItem == null) {
-            Connection connection = DBConnection.getInstance().getConnection();
-            String sql = "INSERT INTO Items (role, batch_num, item_code,brand_name,parts_category, model, item_name, supplier_price,  net_price, qty, discount,profit_percentage, date_bought, selling_price, profit,price) value (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
             try {
+                Connection connection = DBConnection.getInstance().getConnection();
+                connection.setAutoCommit(false);
+                String sql = "INSERT INTO Items (role, batch_num, item_code,brand_name,parts_category, model, item_name, supplier_price,  net_price, qty, discount,profit_percentage, date_bought, selling_price, profit,price) value (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
                 PreparedStatement prd = connection.prepareStatement(sql);
                 prd.setString(1, txtUsrAdmin.getText());
                 prd.setInt(2, batchNo);
@@ -846,20 +863,34 @@ public class ItemScenecontroller {
                 prd.setDate(13, boughtDate);
                 prd.setBigDecimal(14, sellingPrice());
                 prd.setBigDecimal(15, profitPerItem());
-                prd.setBigDecimal(16,price2);
+                prd.setBigDecimal(16, price2);
 
                 tblSummary.getItems().add(item);
                 prd.executeUpdate();
                 clearAll();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+                connection.commit();
+            } catch (Throwable e) {
+                try {
+                    DBConnection.getInstance().getConnection().rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                e.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Failed to save the item, try again!").show();
+            } finally {
+                try {
+                    DBConnection.getInstance().getConnection().setAutoCommit(true);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         } else {
-            String sqlUpdate = "UPDATE Items SET role=?,batch_num=?,item_code=?,brand_name=?, parts_category=?,model=?,item_name=?,supplier_price=?, net_price=?,qty=?,discount=?,profit_percentage=?, date_bought=?,selling_price=?,profit=?,price=? WHERE item_code=?";
-            Connection connection1 = DBConnection.getInstance().getConnection();
-            Long itemCode1 = selectedItem.getItemCode();
 
             try {
+                Connection connection1 = DBConnection.getInstance().getConnection();
+                connection1.setAutoCommit(false);
+                String sqlUpdate = "UPDATE Items SET role=?,batch_num=?,item_code=?,brand_name=?, parts_category=?,model=?,item_name=?,supplier_price=?, net_price=?,qty=?,discount=?,profit_percentage=?, date_bought=?,selling_price=?,profit=?,price=? WHERE item_code=?";
+                Long itemCode1 = selectedItem.getItemCode();
                 PreparedStatement prd = connection1.prepareStatement(sqlUpdate);
 
                 prd.setString(1, txtUsrAdmin.getText());
@@ -877,16 +908,29 @@ public class ItemScenecontroller {
                 prd.setDate(13, boughtDate);
                 prd.setBigDecimal(14, sellingPrice());
                 prd.setBigDecimal(15, profitPerItem());
-                prd.setBigDecimal(16,price2);
+                prd.setBigDecimal(16, price2);
                 prd.setLong(17, itemCode1);
 
                 tblSummary.getItems().remove(selectedItem);
                 tblSummary.getItems().add(item);
                 prd.executeUpdate();
                 clearAll();
+                connection1.commit();
 
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+            } catch (Throwable e) {
+                try {
+                    DBConnection.getInstance().getConnection().rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                e.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Failed to update the item, try again!").show();
+            } finally {
+                try {
+                    DBConnection.getInstance().getConnection().setAutoCommit(true);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
         }

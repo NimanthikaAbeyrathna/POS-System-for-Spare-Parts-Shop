@@ -138,6 +138,10 @@ public class CustomerViewController {
             Connection connection = DBConnection.getInstance().getConnection();
             connection.setAutoCommit(false);
 
+            PreparedStatement stmLoyalty = connection.prepareStatement("DELETE FROM Loyalty WHERE customer_name=?");
+            stmLoyalty.setString(1, tblCustomers.getSelectionModel().getSelectedItem().getName());
+            stmLoyalty.executeUpdate();
+
             PreparedStatement stmContact = connection.prepareStatement("DELETE FROM Contact WHERE customer_id=?");
             stmContact.setInt(1, tblCustomers.getSelectionModel().getSelectedItem().getId());
             stmContact.executeUpdate();

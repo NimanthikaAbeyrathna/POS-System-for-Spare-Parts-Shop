@@ -112,21 +112,40 @@ public class PartsCategorycontroller {
         Category category = new Category(partsCategory);
 
         if (tblCategory.getSelectionModel().getSelectedItem() == null) {
-            String sql = "INSERT INTO Parts_Category (parts_category) VALUES (?)";
-            Connection connection = DBConnection.getInstance().getConnection();
+
             try {
+                Connection connection = DBConnection.getInstance().getConnection();
+                connection.setAutoCommit(false);
+
+                String sql = "INSERT INTO Parts_Category (parts_category) VALUES (?)";
                 PreparedStatement prd = connection.prepareStatement(sql);
                 prd.setString(1, partsCategory);
                 tblCategory.getItems().add(category);
                 txtInput.clear();
                 prd.executeUpdate();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+                connection.commit();
+            } catch (Throwable e) {
+                try {
+                    DBConnection.getInstance().getConnection().rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                e.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Failed to save the part category, try again!").show();
+            } finally {
+                try {
+                    DBConnection.getInstance().getConnection().setAutoCommit(true);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         } else {
-            String sqlUpdate = "UPDATE Parts_Category SET parts_category=? WHERE parts_category=?";
-            Connection connection1 = DBConnection.getInstance().getConnection();
+
             try {
+                Connection connection1 = DBConnection.getInstance().getConnection();
+                connection1.setAutoCommit(false);
+
+                String sqlUpdate = "UPDATE Parts_Category SET parts_category=? WHERE parts_category=?";
                 PreparedStatement prd = connection1.prepareStatement(sqlUpdate);
                 Category selectedItem = tblCategory.getSelectionModel().getSelectedItem();
                 prd.setString(1, partsCategory);
@@ -134,29 +153,57 @@ public class PartsCategorycontroller {
                 tblCategory.getItems().remove(selectedItem);
                 tblCategory.getItems().add(category);
                 prd.executeUpdate();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+                connection1.commit();
+            } catch (Throwable e) {
+                try {
+                    DBConnection.getInstance().getConnection().rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                e.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Failed to update the part category, try again!").show();
+            } finally {
+                try {
+                    DBConnection.getInstance().getConnection().setAutoCommit(true);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
 
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
-
         Category selectedItem = tblCategory.getSelectionModel().getSelectedItem();
         String category = selectedItem.getCategory();
-
-
-        String deleteSql = "DELETE FROM Parts_Category WHERE parts_category=?";
-
-        Connection connection = DBConnection.getInstance().getConnection();
         try {
+            Connection connection = DBConnection.getInstance().getConnection();
+            connection.setAutoCommit(false);
+
+            PreparedStatement stmParts = connection.prepareStatement("DELETE FROM Parts WHERE parts_category=?");
+            stmParts.setString(1, category);
+            stmParts.executeUpdate();
+
+            String deleteSql = "DELETE FROM Parts_Category WHERE parts_category=?";
             PreparedStatement prd = connection.prepareStatement(deleteSql);
             prd.setString(1, category);
             tblCategory.getItems().remove(selectedItem);
             prd.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            connection.commit();
+        }catch (Throwable e) {
+            try {
+                DBConnection.getInstance().getConnection().rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Failed to delete the part category, try again!").show();
+        } finally {
+            try {
+                DBConnection.getInstance().getConnection().setAutoCommit(true);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

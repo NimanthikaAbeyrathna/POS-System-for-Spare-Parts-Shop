@@ -73,6 +73,8 @@ public class ManageUserViewController {
     public void btnDeleteUserOnAction(ActionEvent event) {
         try {
             Connection connection = DBConnection.getInstance().getConnection();
+            connection.setAutoCommit(false);
+
             String sql = "DELETE FROM User WHERE username=?";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, tblUsers.getSelectionModel().getSelectedItem().getUsername());
@@ -80,9 +82,21 @@ public class ManageUserViewController {
 
             tblUsers.getItems().remove(tblUsers.getSelectionModel().getSelectedItem());
             if (tblUsers.getItems().isEmpty()) btnNewUser.fire();
-        } catch (Exception e) {
+            connection.commit();
+        }catch (Throwable e) {
+            try {
+                DBConnection.getInstance().getConnection().rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
             e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Failed to delete the user, try again!").show();
+            new Alert(Alert.AlertType.ERROR, "Failed to delete the user try again!").show();
+        }finally {
+            try {
+                DBConnection.getInstance().getConnection().setAutoCommit(true);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -107,6 +121,7 @@ public class ManageUserViewController {
             User newUser = new User(txtFullName.getText(), txtUsername.getText(), PasswordEncoder.encode(txtPassword.getText()), User.Role.USER);
 
             Connection connection = DBConnection.getInstance().getConnection();
+            connection.setAutoCommit(false);
 
             User selectedUser = tblUsers.getSelectionModel().getSelectedItem();
 
@@ -131,9 +146,21 @@ public class ManageUserViewController {
                 tblUsers.refresh();
             }
             btnNewUser.fire();
-        } catch (Exception e) {
+            connection.commit();
+        } catch (Throwable e) {
+            try {
+                DBConnection.getInstance().getConnection().rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
             e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Failed to save the user, try again!").show();
+            new Alert(Alert.AlertType.ERROR, "Failed to save the user try again!").show();
+        }finally {
+            try {
+                DBConnection.getInstance().getConnection().setAutoCommit(true);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

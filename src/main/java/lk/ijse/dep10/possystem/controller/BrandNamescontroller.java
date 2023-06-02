@@ -104,24 +104,44 @@ public class BrandNamescontroller {
 
         validationOfInput();
 
-        Connection connection = DBConnection.getInstance().getConnection();
         BrandNames selectedItem1 = tblBrand.getSelectionModel().getSelectedItem();
+
         if (selectedItem1 == null) {
 
-            String sql = "INSERT INTO Brands (brand_name) VALUES (?)";
             try {
+                Connection connection = DBConnection.getInstance().getConnection();
+                connection.setAutoCommit(false);
+
+                String sql = "INSERT INTO Brands (brand_name) VALUES (?)";
                 PreparedStatement prd = connection.prepareStatement(sql);
                 prd.setString(1, input);
                 tblBrand.getItems().add(brandNames1);
                 txtInput.clear();
                 prd.executeUpdate();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+
+                connection.commit();
+            } catch (Throwable e) {
+                try {
+                    DBConnection.getInstance().getConnection().rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                e.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Failed to save the brand name, try again!").show();
+            }finally {
+                try {
+                    DBConnection.getInstance().getConnection().setAutoCommit(true);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         } else {
             System.out.println("update");
             String sqlUpdate = "UPDATE Brands SET brand_name =? WHERE brand_name=?";
             try {
+                Connection connection = DBConnection.getInstance().getConnection();
+                connection.setAutoCommit(false);
+
                 PreparedStatement prd = connection.prepareStatement(sqlUpdate);
                 prd.setString(1, input);
                 prd.setString(2, selectedItem1.getBrandName());
@@ -129,8 +149,22 @@ public class BrandNamescontroller {
                 tblBrand.getItems().add(brandNames1);
                 txtInput.clear();
                 prd.executeUpdate();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+
+                connection.commit();
+            } catch (Throwable e) {
+                try {
+                    DBConnection.getInstance().getConnection().rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                e.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Failed to update the brand name, try again!").show();
+            }finally {
+                try {
+                    DBConnection.getInstance().getConnection().setAutoCommit(true);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
@@ -140,16 +174,35 @@ public class BrandNamescontroller {
         int selectedIndex = tblBrand.getSelectionModel().getSelectedIndex();
         BrandNames selectedItem = tblBrand.getSelectionModel().getSelectedItem();
         String brandName = selectedItem.getBrandName();
-        tblBrand.getItems().remove(selectedIndex);
 
-        String sql = "DELETE FROM Brands WHERE brand_name=?";
-        Connection connection = DBConnection.getInstance().getConnection();
         try {
+            Connection connection = DBConnection.getInstance().getConnection();
+            connection.setAutoCommit(false);
+            PreparedStatement stm = connection.prepareStatement("DELETE  FROM List_Of_Bikes WHERE brand_name=?");
+            stm.setString(1,brandName);
+            stm.executeUpdate();
+
+            String sql = "DELETE FROM Brands WHERE brand_name=?";
             PreparedStatement prd = connection.prepareStatement(sql);
             prd.setString(1, brandName);
             prd.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+
+            tblBrand.getItems().remove(selectedIndex);
+            connection.commit();
+        }catch (Throwable e) {
+            try {
+                DBConnection.getInstance().getConnection().rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Failed to delete the brand name, try again!").show();
+        }finally {
+            try {
+                DBConnection.getInstance().getConnection().setAutoCommit(true);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

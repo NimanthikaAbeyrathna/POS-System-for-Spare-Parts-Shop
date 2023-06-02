@@ -529,6 +529,7 @@ public class BillingSceneController {
 
                 try {
                     Connection connection = DBConnection.getInstance().getConnection();
+                    connection.setAutoCommit(false);
 
                     /*update the loyalty table*/
                     PreparedStatement ps3 = connection.prepareStatement("UPDATE Loyalty SET bill_value=? WHERE bill_number=?");
@@ -613,9 +614,21 @@ public class BillingSceneController {
                     ps1.setInt(6, billNumber);
                     ps1.executeUpdate();
 
-
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
+                    connection.commit();
+                }catch (Throwable e) {
+                    try {
+                        DBConnection.getInstance().getConnection().rollback();
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    e.printStackTrace();
+                    new Alert(Alert.AlertType.ERROR, "Failed to update th bill, try again!").show();
+                }finally {
+                    try {
+                        DBConnection.getInstance().getConnection().setAutoCommit(true);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
                 /*update the value of javafx table*/
                 Bill newBill = new Bill(billNumber, dateTime.toLocalDateTime(), cashierName, totalPrice, cash, balance, boughtArrayList);
@@ -632,6 +645,7 @@ public class BillingSceneController {
     public void btnDeleteOnAction(ActionEvent actionEvent) {
         Connection connection = DBConnection.getInstance().getConnection();
         try {
+            connection.setAutoCommit(false);
             Statement stm2 = connection.createStatement();
             String sql2 = "DELETE FROM BillDescription WHERE bill_number=%d";
             sql2 = String.format(sql2, tblBills.getSelectionModel().getSelectedItem().getBillNumber());
@@ -657,10 +671,21 @@ public class BillingSceneController {
 
             tblBills.getItems().remove(tblBills.getSelectionModel().getSelectedItem());
 
-
-        } catch (SQLException e) {
+        connection.commit();
+        }catch (Throwable e) {
+            try {
+                DBConnection.getInstance().getConnection().rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
             e.printStackTrace();
-            System.out.println("fail to delete bill");
+            new Alert(Alert.AlertType.ERROR, "Failed to delete the bill, try again!").show();
+        }finally {
+            try {
+                DBConnection.getInstance().getConnection().setAutoCommit(true);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
 
     }

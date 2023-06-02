@@ -97,7 +97,7 @@ public class ListOfBikescontroller {
 
     private boolean dataValidation() {
         boolean dataValidate = true;
-        if (!(txtInput.getText().matches("[A-Za-z ]+-[0-9]{2,3} ?([a-z]+|[A-Z]+)? ?([a-z]+|[A-Z]+)?"))) {
+        if (!(txtInput.getText().matches(".+"))) {
             txtInput.requestFocus();
             txtInput.clear();
             Alert alert = new Alert(Alert.AlertType.ERROR, "Please Enter the Bike Name in Correct Format");
@@ -152,10 +152,11 @@ public class ListOfBikescontroller {
 
         ListOfBikes selectedItem1 = tblBikes.getSelectionModel().getSelectedItem();
         if (selectedItem1 == null) {
-            Connection connection = DBConnection.getInstance().getConnection();
-            String sql = "INSERT INTO List_Of_Bikes (brand_name, bike) VALUES (?,?)";
 
             try {
+                Connection connection = DBConnection.getInstance().getConnection();
+                connection.setAutoCommit(false);
+                String sql = "INSERT INTO List_Of_Bikes (brand_name, bike) VALUES (?,?)";
                 PreparedStatement prd = connection.prepareStatement(sql);
                 prd.setString(1, selectedBrand);
                 prd.setString(2, modelOfBike);
@@ -163,16 +164,32 @@ public class ListOfBikescontroller {
                 tblBikes.getItems().add(listOfBikes);
                 txtInput.clear();
                 prd.executeUpdate();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+                connection.commit();
+            }catch (Throwable e) {
+                try {
+                    DBConnection.getInstance().getConnection().rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                e.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Failed to save the bike try again!").show();
+            }finally {
+                try {
+                    DBConnection.getInstance().getConnection().setAutoCommit(true);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         } else {
             ListOfBikes selectedItem2 = tblBikes.getSelectionModel().getSelectedItem();
             String bikes = selectedItem2.getBikes();
 
-            String sql = "UPDATE List_Of_Bikes SET bike=? WHERE bike=?";
-            Connection connection = DBConnection.getInstance().getConnection();
+
             try {
+                Connection connection = DBConnection.getInstance().getConnection();
+                connection.setAutoCommit(false);
+
+                String sql = "UPDATE List_Of_Bikes SET bike=? WHERE bike=?";
                 PreparedStatement prd = connection.prepareStatement(sql);
                 prd.setString(1, modelOfBike);
                 prd.setString(2, bikes);
@@ -181,8 +198,21 @@ public class ListOfBikescontroller {
                 tblBikes.getItems().add(listOfBikes);
                 txtInput.clear();
                 prd.executeUpdate();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+                connection.commit();
+            } catch (Throwable e) {
+                try {
+                    DBConnection.getInstance().getConnection().rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                e.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Failed to update the bike name try again!").show();
+            }finally {
+                try {
+                    DBConnection.getInstance().getConnection().setAutoCommit(true);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }

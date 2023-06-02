@@ -10,7 +10,6 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -22,15 +21,15 @@
             <HBox spacing="20.0">
                <children>
                   <Label prefWidth="100.0" text="BATCH NO" />
-                  <TextField fx:id="txtBatchNo" prefHeight="24.0" prefWidth="246.0" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="txtBatchNo" prefHeight="24.0" prefWidth="246.0" promptText="Eg : 52" HBox.hgrow="ALWAYS" />
                   <Button fx:id="btnBatchNumber" mnemonicParsing="false" onAction="#btnBatchNumberOnAction" prefHeight="24.0" prefWidth="27.0" text="+" />
                </children>
             </HBox>
             <HBox spacing="20.0">
                <children>
                   <Label prefWidth="100.0" text="ITEM CODE" />
-                  <TextField fx:id="txtItemCode" editable="false" prefHeight="24.0" prefWidth="246.0" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="btnNew" defaultButton="true" mnemonicParsing="false" onAction="#btnNewOnAction" text="+" />
+                  <TextField fx:id="txtItemCode" editable="false" prefHeight="25.0" prefWidth="187.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="btnNew" defaultButton="true" mnemonicParsing="false" onAction="#btnNewOnAction" prefHeight="25.0" prefWidth="86.0" text="+New Item" />
                </children>
             </HBox>
             <HBox spacing="20.0">
@@ -117,7 +116,6 @@
             </HBox>
          </children>
       </VBox>
-      <BorderPane layoutX="305.0" layoutY="110.0" style="-fx-border-color: black;" />
       <TableView fx:id="tblSummary" editable="true" layoutX="12.0" layoutY="486.0" prefHeight="106.0" prefWidth="1023.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="486.0">
         <columns>
             <TableColumn prefWidth="124.0" text="ADMIN/USER" />

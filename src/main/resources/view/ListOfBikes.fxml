@@ -17,7 +17,7 @@
             <Font size="23.0" />
          </font>
       </Label>
-      <TextField fx:id="txtInput" alignment="TOP_CENTER" layoutX="10.0" layoutY="113.0" prefHeight="24.0" prefWidth="274.0" promptText="Discovery 125" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+      <TextField fx:id="txtInput" alignment="TOP_CENTER" layoutX="10.0" layoutY="113.0" prefHeight="24.0" prefWidth="274.0" promptText="Eg: Discovery 125" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
       <TableView fx:id="tblBikes" layoutX="171.0" layoutY="171.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="150.0">
         <columns>
           <TableColumn prefWidth="199.0" text="Bike types" />

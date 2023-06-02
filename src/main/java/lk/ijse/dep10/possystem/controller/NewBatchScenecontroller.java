@@ -123,45 +123,27 @@ public class NewBatchScenecontroller {
     private boolean id() {
         boolean ids = true;
         int enteredId = parseInt(txtId.getText());
-        ArrayList<Integer> collectionsOfIds = new ArrayList<>();
-        Connection connection = DBConnection.getInstance().getConnection();
-        String sql = "SELECT id FROM Supplier ";
-
-//        ObservableList<NewBatch> items = tblBatchSummary.getItems();
-//        for (NewBatch item : items) {
-//            if (item.getSupplierId() != parseInt(txtId.getText())) {
-//                ids = true;
-//            } else {
-//                ids = false;
-//
-//            }
-//        }
 
         try {
-            PreparedStatement prd = connection.prepareStatement(sql);
-            ResultSet rst = prd.executeQuery();
+            Connection connection = DBConnection.getInstance().getConnection();
 
-            while (rst.next()) {
-                int id = rst.getInt(1);
-                collectionsOfIds.add(id);
+            PreparedStatement stm = connection.prepareStatement("SELECT * FROM Supplier WHERE id=?");
+            stm.setInt(1, enteredId);
+            ResultSet rst = stm.executeQuery();
+
+            if (!rst.next()){
+                ids=false;
+                new Alert(Alert.AlertType.ERROR, "Please Enter Valid Supplier Id").showAndWait();
+                txtId.clear();
+                txtId.requestFocus();
+
             }
+
+            return ids;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        for (Integer collectionsOfId : collectionsOfIds) {
-            if (enteredId == collectionsOfId) {
-                ids = true;
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Please Enter Valid Supplier Id");
-                alert.showAndWait();
-                ids = false;
-                txtId.requestFocus();
-                txtId.clear();
 
-
-            }
-        }
-        return ids;
     }
 
     private void loadBatch() {
@@ -207,7 +189,39 @@ public class NewBatchScenecontroller {
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
         NewBatch selectedItem = tblBatchSummary.getSelectionModel().getSelectedItem();
-        tblBatchSummary.getItems().remove(selectedItem);
+        try {
+            Connection connection = DBConnection.getInstance().getConnection();
+            connection.setAutoCommit(false);
+
+            PreparedStatement stmItem = connection.prepareStatement("DELETE FROM Items WHERE batch_num=?");
+            stmItem.setInt(1, selectedItem.getBatchNo());
+            stmItem.executeUpdate();
+
+            PreparedStatement stmBatch = connection.prepareStatement("DELETE FROM Batches WHERE batch_no=?");
+            stmBatch.setInt(1, selectedItem.getBatchNo());
+            stmBatch.executeUpdate();
+
+            connection.commit();
+
+            tblBatchSummary.getItems().remove(selectedItem);
+            if (tblBatchSummary.getItems().isEmpty()) btnNew.fire();
+        } catch (Throwable e) {
+            try {
+                DBConnection.getInstance().getConnection().rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Failed to delete the batch, try again!").show();
+        }finally {
+            try {
+                DBConnection.getInstance().getConnection().setAutoCommit(true);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+
 
     }
 
@@ -243,29 +257,77 @@ public class NewBatchScenecontroller {
 
         NewBatch newBatch = new NewBatch(id, suplierName(), batchNumber, date, total);
         NewBatch selectedItem = tblBatchSummary.getSelectionModel().getSelectedItem();
-        Connection connection = DBConnection.getInstance().getConnection();
-        if (selectedItem == null) {
-            tblBatchSummary.getItems().add(newBatch);
-            String sql = "INSERT INTO Batches (supplier_id, supplier_name, batch_no, date, total) VALUES ('%d','%s','%d','%s','%f' )";
-            sql = String.format(sql, id, suplierName(), batchNumber, date, total);
 
+        if (selectedItem == null) {
             try {
-                PreparedStatement prd = connection.prepareStatement(sql);
-                prd.executeUpdate();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+                Connection connection = DBConnection.getInstance().getConnection();
+                connection.setAutoCommit(false);
+                // Check for duplicates
+                String selectSql = "SELECT * FROM Batches WHERE supplier_id = ? AND batch_no = ?";
+                PreparedStatement selectStmt = connection.prepareStatement(selectSql);
+                selectStmt.setInt(1, id);
+                selectStmt.setInt(2, batchNumber);
+
+                ResultSet resultSet = selectStmt.executeQuery();
+                if (resultSet.next()) {
+                    new Alert(Alert.AlertType.ERROR, "Duplicate Batch number").showAndWait();
+                } else {
+
+
+                    String sql = "INSERT INTO Batches (supplier_id, supplier_name, batch_no, date, total) VALUES ('%d','%s','%d','%s','%f' )";
+                    sql = String.format(sql, id, suplierName(), batchNumber, date, total);
+
+                    PreparedStatement prd = connection.prepareStatement(sql);
+                    prd.executeUpdate();
+                }
+                tblBatchSummary.getItems().add(newBatch);
+                connection.commit();
+            }catch (Throwable e) {
+                try {
+                    DBConnection.getInstance().getConnection().rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                e.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Failed to save the batch try again!").show();
+            }finally {
+                try {
+                    DBConnection.getInstance().getConnection().setAutoCommit(true);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
+
         } else {
 
-            String sql = "UPDATE Batches SET supplier_id='%s',date='%s',total='%f' WHERE batch_no='%d'";
-            sql = String.format(sql, id, date, total, batchNumber);
             try {
+                Connection connection = DBConnection.getInstance().getConnection();
+                connection.setAutoCommit(false);
+
+                String sql = "UPDATE Batches SET supplier_id='%s',date='%s',total='%f' WHERE batch_no='%d'";
+                sql = String.format(sql, id, date, total, batchNumber);
                 PreparedStatement prd = connection.prepareStatement(sql);
                 prd.executeUpdate();
                 tblBatchSummary.getItems().remove(selectedItem);
                 tblBatchSummary.getItems().add(newBatch);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+                // Assuming tblBatchSummary is your TableView instance
+                tblBatchSummary.getSelectionModel().clearSelection();
+
+                connection.commit();
+            }catch (Throwable e) {
+                try {
+                    DBConnection.getInstance().getConnection().rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                e.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Failed to update the batch try again!").show();
+            }finally {
+                try {
+                    DBConnection.getInstance().getConnection().setAutoCommit(true);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
         }
