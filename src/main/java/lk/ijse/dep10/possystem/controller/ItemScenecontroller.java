@@ -192,9 +192,11 @@ public class ItemScenecontroller {
         generateBarCode();
         initializeJasperReport();
         txtItemCode.textProperty().addListener((observableValue, s, current) -> {
-            generateBarCode();
-
-
+            if(current!=null){
+                cmbBrand.getItems().removeAll(brands());
+                cmbBrand.getItems().addAll(brands());
+                generateBarCode();
+            }
         });
 
 
@@ -206,8 +208,9 @@ public class ItemScenecontroller {
         });
 
         lk.ijse.dep10.possystem.model.User principal = (lk.ijse.dep10.possystem.model.User) System.getProperties().get("principal");
-        txtUsrAdmin.setText(String.format("%s: %s", principal.getRole().name(), principal.getFullName()));
-        cmbBrand.getItems().addAll(brands());
+        txtUsrAdmin.setText(principal.getRole().name()+":"+ principal.getFullName());
+
+
 
         cmbBrand.getSelectionModel().selectedItemProperty().addListener((observableValue, previous, current) -> {
 
@@ -249,6 +252,8 @@ public class ItemScenecontroller {
         });
 
     }
+
+
 
 
     private void setDate(String batchNumber) {
@@ -716,7 +721,7 @@ public class ItemScenecontroller {
         lstSelectedPart.getItems().clear();
         txtItemCode.clear();
         txtBatchNo.clear();
-        txtUsrAdmin.clear();
+//        txtUsrAdmin.clear();
         imgBarcode.setImage(null);
         bikeModel.getItems().clear();
 

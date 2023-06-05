@@ -24,7 +24,7 @@ public class DBConnection {
             String port = properties.getProperty("mysql.port", "3306");
             String database = properties.getProperty("mysql.database", "spare_parats");
             String username = properties.getProperty("mysql.username", "root");
-            String password = properties.getProperty("mysql.password", "Gaya/123&1994");
+            String password = properties.getProperty("mysql.password", "Gaya@12/");
 
             String url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?createDatabaseIfNotExist=true&allowMultiQueries=true";
             connection = DriverManager.getConnection(url, username, password);
