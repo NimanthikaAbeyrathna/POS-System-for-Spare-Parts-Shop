@@ -30,6 +30,7 @@ public class MainViewController {
     public Label lblUser;
     public Button btnBilling;
     public Button btnLoyalty;
+    public Button btnLowQantityItems;
 
     public void initialize(){
         User principal = (User) System.getProperties().get("principal");
@@ -87,5 +88,9 @@ public class MainViewController {
 
     public void btnLoyalityOnAction(ActionEvent actionEvent) throws IOException {
         openNewWindow("Loyalty", btnLoyalty.getScene().getWindow(), "loyaltyScene");
+    }
+
+    public void btnLowQantityItemsOnAction(ActionEvent actionEvent) throws IOException {
+        openNewWindow("Low quantity Items List", btnLowQantityItems.getScene().getWindow(), "ReOrderItemScene");
     }
 }

@@ -1,6 +1,10 @@
 package lk.ijse.dep10.possystem.model;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -8,12 +12,16 @@ import java.util.Date;
 
 
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class Item implements Serializable {
 
     private String role;
     private int batchNo;
     private Long itemCode;
     private String model;
+    private String brandName;
+    private String partsCategory;
     private String itemName;
     private BigDecimal netPrice;
     private int qty;
@@ -25,8 +33,6 @@ public class Item implements Serializable {
     private BigDecimal profit;
 
 
-    public Item() {
-    }
 
     public Item(Long itemCode, String itemName, BigDecimal sellingPrice) {
         this.itemCode = itemCode;
@@ -60,6 +66,17 @@ public class Item implements Serializable {
         this.price = price;
     }
 
+    public Item(Long itemCode, String itemName, String brandName,String partsCategory, String model,int qty,Date dateOfBought) {
+        this.itemCode = itemCode;
+        this.itemName = itemName;
+        this.brandName = brandName;
+        this.partsCategory = partsCategory;
+        this.model = model;
+        this.qty = qty;
+        this.dateOfBought = dateOfBought;
+
+    }
+
     public Item(String role, int batchNo, Long itemCode, String model, String itemName, BigDecimal netPrice, int qty,
                 BigDecimal discount, Date dateOfBought, BigDecimal sellingPrice, BigDecimal profit) {
         this.role = role;
@@ -75,23 +92,7 @@ public class Item implements Serializable {
         this.profit = profit;
     }
 
-    public Item(String role, int batchNo, Long itemCode, String model, String itemName,
-                BigDecimal netPrice, int qty, String consumedQty, BigDecimal price,
-                BigDecimal discount, Date dateOfBought, BigDecimal sellingPrice, BigDecimal profit) {
-        this.role = role;
-        this.batchNo = batchNo;
-        this.itemCode = itemCode;
-        this.model = model;
-        this.itemName = itemName;
-        this.netPrice = netPrice;
-        this.qty = qty;
-        this.consumedQty = consumedQty;
-        this.price = price;
-        this.discount = discount;
-        this.dateOfBought = dateOfBought;
-        this.sellingPrice = sellingPrice;
-        this.profit = profit;
-    }
+
 
     public BigDecimal getPrice(){
         return new BigDecimal(getConsumedQty()).multiply(sellingPrice);
@@ -196,5 +197,21 @@ public class Item implements Serializable {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
+    }
+
+    public String getPartsCategory() {
+        return partsCategory;
+    }
+
+    public void setPartsCategory(String partsCategory) {
+        this.partsCategory = partsCategory;
     }
 }
