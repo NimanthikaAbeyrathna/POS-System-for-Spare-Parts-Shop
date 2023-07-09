@@ -7,6 +7,7 @@
 1. Jave SE
 2. Java FX
 3. mysql
+4. CSS
 
 #### Used apps
 1. Scene Builder
