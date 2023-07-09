@@ -13,19 +13,20 @@
 
 ## version 
 1.0.0
-## Authors
 
-- @nimanthikaabeyrathna
+## Contributors
 
+- [@nimanthikaabeyrathna](https://github.com/NimanthikaAbeyrathna)
+- [@gayanthakuruppuarachchi](https://github.com/Gayantha250)
+- [@pebashitharushika](https://github.com/Pebhashi)
 
-## 🚀 About Me
-I'm a full stack developer...
 
 
 ## 🔗 Links
 
-[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/nimanthika-abeyrathna-b27b48184/)
-email - nimanthikaabeyrathna@gmail.com
+emails - nimanthikaabeyrathna@gmail.com
+      -  gayantha355@gmail.com
+      - pebhashitharushika@gmail.com
 
 ### License
 This project is licensed under this [license](LICENCE.txt).
