@@ -14,6 +14,9 @@
 ## version 
 1.0.0
 
+
+[pos app.webm](https://github.com/dep-working-area/POS-System-for-Spare-Parts-/assets/121820614/15120c50-7508-4757-8d32-c1327293065d)
+
 ## Contributors
 
 - [@nimanthikaabeyrathna](https://github.com/NimanthikaAbeyrathna)
